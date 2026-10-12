@@ -4,39 +4,29 @@ Tema Pterodactyl dengan identitas visual Rapelz Hosting: navy gelap, electric bl
 
 ## Status rebuild
 
-Branch **`rebuild/noobee-architecture`** sedang menyiapkan rebuild React theme dengan pola arsitektur yang dipelajari dari Noobee, tetapi tetap mempertahankan desain Rapelz. Perubahan belum digabung ke `main` dan belum diterapkan ke panel produksi.
+Branch **`rebuild/noobee-architecture`** berisi rebuild terarah dengan prinsip implementasi yang dipelajari dari Noobee, tanpa menyalin desain Noobee. Perubahan belum digabung ke `main` dan belum diterapkan ke panel produksi.
 
-- `pterodactyl/theme/`: stylesheet modular untuk token, global foundation, komponen yang ditandai, dashboard, console, dan file manager.
-- `pterodactyl/apply-modular-theme.sh`: integrasi source bertarget Pterodactyl 1.15.1, dengan backup, pemeriksaan anchor, serta penolakan jalur web-root secara default.
-- `pterodactyl/admin-theme.css`: styling terpisah untuk AdminLTE/Blade.
-- `pterodactyl/react-theme.css`: stylesheet override lama, dipertahankan sebagai referensi/rollback dan tidak diimpor oleh jalur modular.
-- `pterodactyl/INSTALL-PTERODACTYL.md`: petunjuk integrasi staging, pengujian, dan rollback.
-- `styles.css` + `index.html`: prototipe statis **Backup Manager** dengan data demo. Prototipe ini bukan fitur Pterodactyl dan tidak dipasang ke panel.
+- `pterodactyl/theme/`: CSS modular untuk client React: token, global foundation, komponen ber-marker, dashboard, console, dan file manager.
+- `pterodactyl/apply-modular-theme.sh`: integrasi source untuk Pterodactyl 1.15.1 dengan pemeriksaan anchor, backup otomatis, serta penolakan path `/var/www/*` secara default.
+- `pterodactyl/admin-theme.css` + `pterodactyl/admin/`: entry dan modul CSS terpisah untuk AdminLTE/Blade.
+- `pterodactyl/rollback-modular-theme.sh`: pemulihan source dari backup installer.
+- `pterodactyl/react-theme.css`: CSS override lama yang dipertahankan sebagai referensi/rollback; jalur modular tidak mengimpornya.
+- `styles.css`, `index.html`, `app.js`: prototipe statis **Backup Manager** dengan data demo; bukan fitur Pterodactyl dan tidak dipasang ke panel.
 
-## Pendekatan teknis
+## Arsitektur
 
-Alih-alih menimpa warna semua utility class lewat selector CSS global, overlay memetakan palette Tailwind Pterodactyl ke token Rapelz saat build. Styling tambahan menggunakan GlobalStylesheet React, penanda komponen yang spesifik, dan aturan page-scoped. Komponen, route, permission, API, console/websocket, serta tindakan server asli Pterodactyl dipertahankan.
+Warna utama dipetakan menjadi token native Tailwind pada build-time, sehingga halaman React yang memakai utility classes menggunakan palet Rapelz. Global canvas tetap ditangani oleh `GlobalStylesheet.ts`, komponen Pterodactyl existing tetap memegang layout dan perilakunya, dan stylesheet tambahan menargetkan marker komponen/page tertentu. AdminLTE memakai berkas terpisah karena berasal dari layout Blade yang berbeda.
 
-Tidak ada addon yang dibutuhkan. Tidak ada fitur Backup Manager yang ditambahkan.
+Overlay tidak mengubah route, permission, API contract, authentication, websocket, model data, atau tindakan server. Tidak ada addon yang diperlukan, dan tidak ada fitur Backup Manager baru.
 
 ## Validasi
 
-GitHub Actions mengambil source resmi Pterodactyl **v1.15.1** pada runner terisolasi, menerapkan overlay, lalu menjalankan TypeScript, ESLint, dan webpack production-mode tanpa menjalankan script `build:production` yang menghapus aset terlebih dahulu. Uji runtime visual tetap perlu dilakukan di panel staging sebelum deployment.
+GitHub Actions mengambil source resmi `pterodactyl/panel v1.15.1` pada runner terisolasi, menerapkan overlay dua kali untuk mengecek idempotensi, lalu menjalankan TypeScript, ESLint, dan webpack production-mode tanpa menjalankan script `build:production` yang membersihkan aset terlebih dahulu. Lolos CI belum menggantikan uji visual/runtime pada staging yang terhubung ke konfigurasi nyata panel.
 
-## Integrasi
+## Staging
 
-Baca [panduan Pterodactyl 1.15.1](pterodactyl/INSTALL-PTERODACTYL.md). Untuk staging:
+Baca [panduan integrasi](pterodactyl/INSTALL-PTERODACTYL.md). Jangan menerapkan ke `/var/www/pterodactyl` terlebih dahulu. Build dan smoke test di salinan staging; production deployment membutuhkan backup aset yang dapat dipulihkan.
 
-```bash
-bash pterodactyl/apply-modular-theme.sh /root/pterodactyl-rapelz-staging
-cd /root/pterodactyl-rapelz-staging
-corepack yarn tsc
-corepack yarn lint
-corepack yarn build
-```
+## Prototipe
 
-Jangan jalankan integrasi langsung pada `/var/www/pterodactyl`. Installer menolak jalur web-root kecuali override eksplisit diberikan. Deployment produksi tetap harus memakai backup aset yang bisa dipulihkan dan build staging yang sudah diverifikasi.
-
-## Preview prototipe terpisah
-
-Buka `index.html` di browser untuk melihat mockup Backup Manager berbasis data simulasi. Jangan tautkan atau pasang halaman tersebut sebagai route Pterodactyl produksi.
+`index.html` hanya mockup Backup Manager dengan data simulasi. Jangan tautkan atau pasang mockup tersebut sebagai route Pterodactyl produksi.
