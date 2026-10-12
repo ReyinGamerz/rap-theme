@@ -31,6 +31,7 @@ jobs:
       - name: Validate modular CSS graph and script syntax
         run: |
           bash -n pterodactyl/apply-modular-theme.sh
+          bash -n pterodactyl/rollback-modular-theme.sh
           node -e "const fs=require('fs'); const m=JSON.parse(fs.readFileSync('pterodactyl/theme/manifest.json','utf8')); if(m.entry!=='entry.css'||!Array.isArray(m.styles)||m.styles.length===0) process.exit(1); for(const f of [m.entry,...m.styles]) if(!fs.existsSync('pterodactyl/theme/'+f)) { console.error('Missing theme file:',f); process.exit(1); }"
           node - <<'NODE'
           const fs = require('fs');
@@ -99,7 +100,11 @@ jobs:
       - name: Apply overlay to isolated upstream source
         run: bash pterodactyl/apply-modular-theme.sh "$GITHUB_WORKSPACE/panel"
       - name: Verify overlay is idempotent
-        run: bash pterodactyl/apply-modular-theme.sh "$GITHUB_WORKSPACE/panel"
+        run: |
+          git -C panel diff --binary > /tmp/rapelz-overlay-first.diff
+          bash pterodactyl/apply-modular-theme.sh "$GITHUB_WORKSPACE/panel"
+          git -C panel diff --binary > /tmp/rapelz-overlay-second.diff
+          diff -u /tmp/rapelz-overlay-first.diff /tmp/rapelz-overlay-second.diff
       - name: Install upstream dependencies
         working-directory: panel
         run: corepack yarn install --frozen-lockfile
