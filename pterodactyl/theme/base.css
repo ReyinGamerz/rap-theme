@@ -1,0 +1,59 @@
+/* Minimal global layer. Prefer component styles to broad global overrides. */
+html,
+body,
+#app {
+    min-height: 100%;
+    background: var(--rap-bg);
+    color: var(--rap-text);
+}
+
+body {
+    font-feature-settings: "ss01" on;
+}
+
+::selection {
+    color: #fff;
+    background: rgb(8 124 255 / 32%);
+}
+
+:where(a, button, input, select, textarea, [role="button"]):focus-visible {
+    outline: 2px solid rgb(8 124 255 / 85%);
+    outline-offset: 2px;
+}
+
+:where(button, [role="button"], a) {
+    -webkit-tap-highlight-color: transparent;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--rap-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2a3b52;
+    border: 2px solid var(--rap-bg);
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3c5675;
+}
+
+:where(img, canvas, video, svg) {
+    max-width: 100%;
+}
+
+/* Keep wide data and terminal content from widening mobile viewports. */
+#app {
+    min-width: 0;
+    overflow-x: clip;
+}
+
+:where(pre, code) {
+    overflow-wrap: anywhere;
+}
