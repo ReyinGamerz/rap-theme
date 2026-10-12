@@ -9,7 +9,7 @@ Rap-theme is being rebuilt using Noobee-inspired engineering patterns while reta
 - Imports the modular CSS entry from `App.tsx` after Tailwind.
 - Adds narrowly scoped data/class markers to the existing panel, input, server row, console metrics, chart and file row components.
 - Keeps Pterodactyl route handling, permission checks, API calls, websocket/console behavior, actions, and data models intact.
-- Splits the legacy AdminLTE admin UI into its own token, base, and refinement CSS files, loaded by a small Blade-linked entry stylesheet.
+- Splits the legacy AdminLTE admin UI into base and refinement CSS files; its entry imports the same shared `theme/tokens.css` copied into the AdminLTE asset directory.
 - Requires no addons and does not add Backup Manager.
 
 ## Important: stage first
