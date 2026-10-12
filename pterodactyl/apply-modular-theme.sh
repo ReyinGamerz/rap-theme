@@ -191,6 +191,14 @@ const rapelzBorder = {
         rel,
         flags=re.S,
     )
+    # Radius and shadow utilities are first-class tokens too, replacing the
+    # prior broad selectors that forced radius/shadow on arbitrary elements.
+    text = replace_once(
+        text,
+        r"(\\s*fontSize:\\s*\\{)",
+        lambda m: "\\n            borderRadius: {\\n                DEFAULT: '9px',\\n                none: '0px',\\n                sm: '7px',\\n                md: '9px',\\n                lg: '9px',\\n                xl: '9px',\\n                '2xl': '11px',\\n                full: '9999px',\\n            },\\n            boxShadow: {\\n                sm: '0 1px 2px rgb(0 0 0 / 5%)',\\n                DEFAULT: '0 4px 14px rgb(0 0 0 / 12%)',\\n                md: '0 5px 18px rgb(0 0 0 / 12%)',\\n                lg: '0 6px 20px rgb(0 0 0 / 13%)',\\n                xl: '0 10px 25px rgb(0 0 0 / 15%)',\\n                '2xl': '0 16px 36px rgb(0 0 0 / 20%)',\\n                inner: 'inset 0 1px 0 rgb(255 255 255 / 2%)',\\n                none: 'none',\\n            },\\n            " + m.group(1),
+        rel,
+    )
     changes[rel] = text
 
 # GlobalStylesheet is an intentional React global-style layer, like Noobee's.
