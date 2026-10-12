@@ -1,0 +1,348 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Apply the Noobee-inspired, Rapelz-branded source integration to a Pterodactyl
+# Panel 1.15.1 source tree. This script deliberately does not run a build.
+#
+# Usage (staging only):
+#   bash pterodactyl/apply-modular-theme.sh /root/pterodactyl-rapelz-staging
+#
+# Production is refused by default. Never run a production build until staging
+# passes TypeScript + webpack validation and a public/assets backup exists.
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+REPO_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd -P)"
+PANEL_DIR="${1:-}"
+
+if [[ -z "$PANEL_DIR" || ! -d "$PANEL_DIR" ]]; then
+    echo "Usage: $0 /path/to/pterodactyl-staging"
+    exit 2
+fi
+
+PANEL_DIR="$(cd -- "$PANEL_DIR" && pwd -P)"
+case "$PANEL_DIR" in
+    /var/www/pterodactyl|/var/www/pterodactyl/*)
+        if [[ "${RAPELZ_ALLOW_PRODUCTION:-0}" != "1" ]]; then
+            echo "ERROR: production path refused: $PANEL_DIR"
+            echo "Run this on the staging copy first. Production requires explicit RAPELZ_ALLOW_PRODUCTION=1."
+            exit 10
+        fi
+        ;;
+esac
+
+required=(
+    package.json
+    yarn.lock
+    tailwind.config.js
+    resources/scripts/components/App.tsx
+    resources/scripts/assets/css/GlobalStylesheet.ts
+    resources/scripts/components/elements/ContentBox.tsx
+    resources/scripts/components/elements/Input.tsx
+    resources/scripts/components/elements/GreyRowBox.tsx
+    resources/scripts/components/elements/TitledGreyBox.tsx
+    resources/scripts/components/dashboard/ServerRow.tsx
+    resources/scripts/components/server/console/StatBlock.tsx
+    resources/scripts/components/server/console/ChartBlock.tsx
+    resources/scripts/components/server/files/FileObjectRow.tsx
+    resources/views/layouts/admin.blade.php
+)
+
+for file in "${required[@]}"; do
+    if [[ ! -f "$PANEL_DIR/$file" ]]; then
+        echo "ERROR: missing expected Pterodactyl source file: $file"
+        exit 3
+    fi
+done
+
+if ! grep -q '"name"[[:space:]]*:[[:space:]]*"pterodactyl-panel"' "$PANEL_DIR/package.json"; then
+    echo "ERROR: package.json does not identify a Pterodactyl Panel source tree."
+    exit 4
+fi
+
+if ! grep -q "import '@/assets/tailwind.css';" "$PANEL_DIR/resources/scripts/components/App.tsx"; then
+    echo "ERROR: App.tsx does not contain the expected v1.15.1 Tailwind import anchor."
+    echo "No source files changed. Inspect the source version before continuing."
+    exit 5
+fi
+
+if [[ ! -s "$SCRIPT_DIR/theme/entry.css" || ! -s "$SCRIPT_DIR/admin-theme.css" ]]; then
+    echo "ERROR: theme entry or admin stylesheet is missing from the rap-theme repository."
+    exit 6
+fi
+
+STAMP="$(date +%Y%m%d-%H%M%S)"
+if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
+    BACKUP_BASE="/root"
+else
+    BACKUP_BASE="${TMPDIR:-/tmp}"
+fi
+BACKUP_DIR="$BACKUP_BASE/rapelz-theme-rebuild-backup-$STAMP"
+mkdir -p "$BACKUP_DIR"
+
+backup_one() {
+    local relative="$1"
+    if [[ -e "$PANEL_DIR/$relative" ]]; then
+        mkdir -p "$BACKUP_DIR/$(dirname "$relative")"
+        cp -a "$PANEL_DIR/$relative" "$BACKUP_DIR/$relative"
+    fi
+}
+for file in "${required[@]}"; do backup_one "$file"; done
+backup_one "resources/scripts/assets/css/rapelz-theme.css"
+backup_one "resources/scripts/assets/css/rapelz-theme"
+backup_one "public/themes/pterodactyl/css/rapelz-theme.css"
+
+echo "Applying version-checked source changes..."
+python3 - "$PANEL_DIR" <<'PY'
+from pathlib import Path
+import re
+import sys
+
+root = Path(sys.argv[1])
+
+def read(rel):
+    p = root / rel
+    if not p.is_file():
+        raise RuntimeError(f"Required file missing: {rel}")
+    return p.read_text(encoding="utf-8")
+
+def replace_once(text, pattern, replacement, label, flags=0):
+    updated, count = re.subn(pattern, replacement, text, count=1, flags=flags)
+    if count != 1:
+        raise RuntimeError(f"Source anchor mismatch in {label}; expected exactly one match, got {count}. No source files written.")
+    return updated
+
+changes = {}
+
+# Tailwind utility palettes become the native Rapelz design tokens. This avoids
+# recoloring every page with broad global CSS selectors.
+rel = "tailwind.config.js"
+text = read(rel)
+marker = "/* RAPELZ THEME TOKENS v1 */"
+if marker not in text:
+    palette = """/* RAPELZ THEME TOKENS v1 */
+const rapelzGray = {
+    50: '#f7f9fc',
+    100: '#e8edf5',
+    200: '#cbd7e8',
+    300: '#b7c4d7',
+    400: '#94a2b7',
+    500: '#71839c',
+    600: '#142235',
+    700: '#101b28',
+    800: '#0c1520',
+    900: '#070d16',
+    950: '#050a11',
+};
+
+const rapelzBlue = {
+    50: '#edf6ff',
+    100: '#dcecff',
+    200: '#c2e0ff',
+    300: '#94caff',
+    400: '#55aaff',
+    500: '#168bff',
+    600: '#087cff',
+    700: '#0068e8',
+    800: '#0056c7',
+    900: '#0644a3',
+    950: '#0b2e66',
+};
+
+const rapelzBorder = {
+    50: '#f7f9fc',
+    100: '#e8edf5',
+    200: '#cbd7e8',
+    300: '#202d3d',
+    400: '#202d3d',
+    500: '#202d3d',
+    600: '#202d3d',
+    700: '#202d3d',
+    800: '#202d3d',
+    900: '#202d3d',
+    950: '#202d3d',
+};
+"""
+    text = replace_once(
+        text,
+        r"const colors = require\('tailwindcss/colors'\);\s*const gray = \{.*?\n\};",
+        lambda _m: palette.rstrip(),
+        rel,
+        flags=re.S,
+    )
+    colors_block = """colors: {
+                black: '#050a11',
+                blue: rapelzBlue,
+                primary: rapelzBlue,
+                gray: rapelzGray,
+                neutral: rapelzGray,
+                cyan: rapelzBlue,
+            },"""
+    text = replace_once(
+        text,
+        r"colors:\s*\{\s*black:\s*'#131a20',.*?cyan:\s*colors\.cyan,\s*\},",
+        lambda _m: colors_block,
+        rel,
+        flags=re.S,
+    )
+    text = replace_once(
+        text,
+        r"borderColor:\s*theme\s*=>\s*\(\{\s*default:\s*theme\('colors\.neutral\.400',\s*'currentColor'\),\s*\}\),",
+        "borderColor: theme => ({\n                default: 'var(--rap-line)',\n                neutral: rapelzBorder,\n                gray: rapelzBorder,\n            }),",
+        rel,
+        flags=re.S,
+    )
+    changes[rel] = text
+
+# GlobalStylesheet is an intentional React global-style layer, like Noobee's.
+rel = "resources/scripts/assets/css/GlobalStylesheet.ts"
+text = read(rel)
+marker = "/* RAPELZ THEME GLOBAL CANVAS */"
+if marker not in text:
+    text = replace_once(
+        text,
+        r"letter-spacing:\s*0\.015em;",
+        "letter-spacing: 0.015em;\n        /* RAPELZ THEME GLOBAL CANVAS */\n        background-color: var(--rap-bg);\n        color: var(--rap-text);\n        min-height: 100vh;",
+        rel,
+    )
+changes[rel] = text
+
+# Activate the modular stylesheet and remove the previous single-file CSS
+# import if the earlier Rap-theme installer had already added it.
+rel = "resources/scripts/components/App.tsx"
+text = read(rel)
+legacy_import = "import '@/assets/css/rapelz-theme.css';"
+text = text.replace(legacy_import + "\n", "").replace(legacy_import, "")
+new_import = "import '@/assets/css/rapelz-theme/entry.css';"
+if new_import not in text:
+    text = replace_once(
+        text,
+        r"import '@/assets/tailwind\.css';",
+        "import '@/assets/tailwind.css';\n" + new_import,
+        rel,
+    )
+changes[rel] = text
+
+# Add narrowly scoped markers to the existing reusable components. The
+# components retain Pterodactyl behavior, types, actions, and data flow.
+patches = [
+    (
+        "resources/scripts/components/elements/ContentBox.tsx",
+        'data-rapelz-component="content-panel"',
+        r"<div css=\{\[tw.*?!!borderColor.*?\]\}>",
+        lambda m: m.group(0).replace("<div ", '<div data-rapelz-component="content-panel" ', 1),
+        re.S,
+    ),
+    (
+        "resources/scripts/components/elements/TitledGreyBox.tsx",
+        'data-rapelz-component="titled-panel"',
+        r"<div css=\{tw.*?className=\{className\}>",
+        lambda m: m.group(0).replace("<div ", '<div data-rapelz-component="titled-panel" ', 1),
+        re.S,
+    ),
+    (
+        "resources/scripts/components/elements/GreyRowBox.tsx",
+        "'data-rapelz-component': 'row'",
+        r"export default styled\.div<\{\s*\$hoverable\?: boolean\s*\}>",
+        "export default styled.div.attrs({ 'data-rapelz-component': 'row' })<{ $hoverable?: boolean }>",
+        0,
+    ),
+    (
+        "resources/scripts/components/elements/Input.tsx",
+        "'data-rapelz-component': 'input'",
+        r"const Input = styled\.input<Props>",
+        "const Input = styled.input.attrs({ 'data-rapelz-component': 'input' })<Props>",
+        0,
+    ),
+    (
+        "resources/scripts/components/elements/Input.tsx",
+        "'data-rapelz-component': 'textarea'",
+        r"const Textarea = styled\.textarea<Props>",
+        "const Textarea = styled.textarea.attrs({ 'data-rapelz-component': 'textarea' })<Props>",
+        0,
+    ),
+    (
+        "resources/scripts/components/dashboard/ServerRow.tsx",
+        'data-rapelz-component="server-row"',
+        r'className=\{className\}\s+\$status=\{stats\?\.status\}',
+        'className={className} data-rapelz-component="server-row" $status={stats?.status}',
+        0,
+    ),
+    (
+        "resources/scripts/components/server/console/StatBlock.tsx",
+        "rapelz-stat-card",
+        r"classNames\(styles\.stat_block,\s*'bg-gray-600',\s*className\)",
+        "classNames(styles.stat_block, 'bg-gray-600', 'rapelz-stat-card', className)",
+        0,
+    ),
+    (
+        "resources/scripts/components/server/console/ChartBlock.tsx",
+        "rapelz-chart-card",
+        r"classNames\(styles\.chart_container,\s*'group'\)",
+        "classNames(styles.chart_container, 'group', 'rapelz-chart-card')",
+        0,
+    ),
+    (
+        "resources/scripts/components/server/files/FileObjectRow.tsx",
+        "rapelz-file-row",
+        r"className=\{styles\.file_row\}",
+        lambda _m: "className={" + chr(96) + "{styles.file_row} rapelz-file-row" + chr(96) + "}",
+        0,
+    ),
+]
+
+for rel, marker, pattern, replacement, flags in patches:
+    text = changes.get(rel, read(rel))
+    if marker in text:
+        changes[rel] = text
+        continue
+    text = replace_once(text, pattern, replacement, rel, flags=flags)
+    changes[rel] = text
+
+# AdminLTE remains a separate, existing CSS target.
+rel = "resources/views/layouts/admin.blade.php"
+text = read(rel)
+if "Theme::css('css/rapelz-theme.css" not in text:
+    if "Theme::css('css/pterodactyl.css?t={cache-version}')" in text:
+        text = replace_once(
+            text,
+            r"(\{!! Theme::css\('css/pterodactyl\.css\?t=\{cache-version\}'\) !!\})",
+            r"\1\n            {!! Theme::css('css/rapelz-theme.css?t={cache-version}') !!}",
+            rel,
+        )
+    elif "Theme::css('css/pterodactyl.css')" in text:
+        text = replace_once(
+            text,
+            r"(\{!! Theme::css\('css/pterodactyl\.css'\) !!\})",
+            r"\1\n            {!! Theme::css('css/rapelz-theme.css') !!}",
+            rel,
+        )
+    else:
+        raise RuntimeError(f"Source anchor mismatch in {rel}; admin stylesheet registration not found. No source files written.")
+changes[rel] = text
+
+# All replacements are verified before the first write. Write only changed files.
+for rel, text in changes.items():
+    (root / rel).write_text(text, encoding="utf-8")
+    print(f"Patched {rel}")
+PY
+
+DEST_THEME="$PANEL_DIR/resources/scripts/assets/css/rapelz-theme"
+rm -rf "$DEST_THEME"
+mkdir -p "$DEST_THEME"
+cp -a "$SCRIPT_DIR/theme/." "$DEST_THEME/"
+
+mkdir -p "$PANEL_DIR/public/themes/pterodactyl/css"
+install -m 0644 "$SCRIPT_DIR/admin-theme.css" "$PANEL_DIR/public/themes/pterodactyl/css/rapelz-theme.css"
+
+echo
+echo "Rapelz modular source integration complete."
+echo "Backups: $BACKUP_DIR"
+echo "Target: $PANEL_DIR"
+echo
+echo "NEXT (staging only):"
+echo "  cd \"$PANEL_DIR\""
+echo "  corepack yarn tsc"
+echo "  corepack yarn build"
+echo "  # Open the staging panel and smoke-test login, dashboard, server, console, files, and admin."
+echo
+echo "Do not run build:production in production: Pterodactyl's script cleans public/assets first."
