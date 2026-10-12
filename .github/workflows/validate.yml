@@ -1,6 +1,7 @@
 name: Validate Rapelz modular theme
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -72,6 +73,8 @@ jobs:
           cache: yarn
           cache-dependency-path: panel/yarn.lock
       - name: Apply overlay to isolated upstream source
+        run: bash pterodactyl/apply-modular-theme.sh "$GITHUB_WORKSPACE/panel"
+      - name: Verify overlay is idempotent
         run: bash pterodactyl/apply-modular-theme.sh "$GITHUB_WORKSPACE/panel"
       - name: Install upstream dependencies
         working-directory: panel
