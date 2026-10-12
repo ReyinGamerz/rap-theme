@@ -4,13 +4,16 @@ Tema visual navy gelap + electric blue untuk ekosistem Rapelz Hosting.
 
 ## Status
 
-- `styles.css`: prototipe visual **Backup Manager** (demo data, bukan fitur produksi).
-- `pterodactyl/admin-theme.css`: lapisan CSS visual untuk halaman admin Pterodactyl.
-- Tema admin hanya mengubah tampilan; tidak menambah route/API, autentikasi, atau fitur Backup Manager.
+- `styles.css` dan `index.html`: prototipe visual **Backup Manager** (data demo, bukan fitur produksi).
+- `pterodactyl/react-theme.css`: lapisan CSS visual untuk UI React Pterodactyl 1.15.1 (dashboard, auth, halaman server).
+- `pterodactyl/admin-theme.css`: lapisan CSS visual untuk Admin UI berbasis Blade.
+- `pterodactyl/INSTALL-PTERODACTYL.md`: petunjuk integrasi manual, build, dan rollback.
 
-## Pasang CSS admin pada Pterodactyl 1.15.1
+Tema Pterodactyl ini hanya mengubah presentasi visual. Tidak menambah route/API/fitur Backup Manager dan tidak mengubah logika autentikasi, console, maupun pengelolaan server.
 
-Lihat [INSTALL-PTERODACTYL.md](INSTALL-PTERODACTYL.md). Jalankan langkah secara manual setelah membaca instruksi. Disarankan backup file target dan uji di staging lebih dahulu.
+## Pemasangan
+
+Ikuti [panduan Pterodactyl 1.15.1](pterodactyl/INSTALL-PTERODACTYL.md). Uji build pada salinan staging terlebih dahulu. Jangan jalankan `yarn build:production` pada produksi sebelum dependensi tersedia dan backup aset dapat dipulihkan, karena script bawaan menjalankan `clean` yang menghapus file JavaScript dan source map lama.
 
 ## Preview prototipe
 
