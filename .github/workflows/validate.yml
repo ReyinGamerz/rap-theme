@@ -1,0 +1,24 @@
+name: Validate theme prototype
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check JavaScript syntax
+        run: node --check app.js
+      - name: Verify referenced local assets
+        run: |
+          test -s index.html
+          test -s styles.css
+          test -s app.js
+          grep -q 'id="backupRows"' index.html
+          grep -q 'id="nodeFilter"' index.html
+          grep -q 'id="restore"' index.html
+          grep -q 'id="toast"' index.html
