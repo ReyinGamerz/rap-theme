@@ -411,19 +411,6 @@ patches = [
     ),
 ]
 
-# Repair the malformed file-row interpolation from an earlier overlay.
-rel = "resources/scripts/components/server/files/FileObjectRow.tsx"
-text = changes.get(rel, read(rel))
-text = text.replace("className={`{styles.file_row} rapelz-file-row`}", "className={`${styles.file_row} rapelz-file-row`}")
-if "rapelz-file-row" not in text:
-    text = replace_once(
-        text,
-        r"className=\{styles\.file_row\}",
-        lambda _m: "className={" + chr(96) + "${styles.file_row} rapelz-file-row" + chr(96) + "}",
-        rel,
-    )
-changes[rel] = text
-
 for rel, marker, pattern, replacement, flags in patches:
     text = changes.get(rel, read(rel))
     if marker in text:
