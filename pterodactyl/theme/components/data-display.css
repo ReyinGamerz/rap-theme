@@ -1,0 +1,43 @@
+/* Readable tables without altering the data model or table behavior. */
+table {
+    color: var(--rap-text);
+    border-color: var(--rap-border);
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+thead {
+    background: #0a131f;
+}
+
+thead th {
+    color: #bdcadd;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .035em;
+    text-transform: uppercase;
+}
+
+table :where(th, td) {
+    border-color: var(--rap-border);
+}
+
+tbody tr {
+    transition: background-color .12s ease;
+}
+
+tbody tr:hover td {
+    background-color: rgb(8 124 255 / 4.5%);
+}
+
+:where([class*="text-green-"], [class*="text-success"]) {
+    color: var(--rap-green);
+}
+
+:where([class*="text-red-"], [class*="text-danger"]) {
+    color: var(--rap-red);
+}
+
+:where([class*="text-yellow-"], [class*="text-amber-"], [class*="text-warning"]) {
+    color: var(--rap-amber);
+}
