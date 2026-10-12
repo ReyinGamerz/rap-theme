@@ -231,3 +231,41 @@ pre, code, .xterm, .xterm-screen, .xterm-viewport { min-width: 0; }
     [class*="overflow-x-auto"] { max-width: 100%; }
     [class*="grid-cols-3"], [class*="grid-cols-6"] { min-width: 0; }
 }
+
+
+/* Rapelz server tab selected-state refinement (Pterodactyl NavLink) */
+/* Target the server sub-navigation only; avoid changing global/admin navigation. */
+#server-navigation a.active,
+#server-navigation a[aria-current="page"],
+.server-navigation a.active,
+.server-navigation a[aria-current="page"],
+nav[aria-label*="server" i] a.active,
+nav[aria-label*="server" i] a[aria-current="page"],
+nav a[href*="/server/"].active,
+nav a[href*="/server/"][aria-current="page"] {
+    color: #fff !important;
+    background: linear-gradient(135deg, #087cff, #075fd0) !important;
+    border-color: rgba(66, 153, 255, .65) !important;
+    border-radius: 8px;
+    box-shadow: 0 3px 12px rgb(8 124 255 / 22%);
+    font-weight: 600;
+}
+#server-navigation a.active:hover,
+#server-navigation a[aria-current="page"]:hover,
+.server-navigation a.active:hover,
+.server-navigation a[aria-current="page"]:hover,
+nav[aria-label*="server" i] a.active:hover,
+nav[aria-label*="server" i] a[aria-current="page"]:hover,
+nav a[href*="/server/"].active:hover,
+nav a[href*="/server/"][aria-current="page"]:hover {
+    color: #fff !important;
+    background: #0068e8 !important;
+}
+#server-navigation a:not(.active):not([aria-current="page"]):hover,
+.server-navigation a:not(.active):not([aria-current="page"]):hover,
+nav[aria-label*="server" i] a:not(.active):not([aria-current="page"]):hover,
+nav a[href*="/server/"]:not(.active):not([aria-current="page"]):hover {
+    color: #fff !important;
+    background: rgb(8 124 255 / 10%) !important;
+    border-radius: 8px;
+}
