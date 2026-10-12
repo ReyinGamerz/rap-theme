@@ -1,21 +1,99 @@
-/* Rapelz design tokens shared by CSS modules and GlobalStylesheet.ts. */
+/* Single source of truth for the Rapelz React design system.
+ * Color channels let Tailwind utilities apply opacity without duplicating hex values.
+ */
 :root {
     color-scheme: dark;
-    --rap-bg: #070d16;
-    --rap-panel: #0c1520;
-    --rap-panel-2: #101b28;
-    --rap-panel-3: #142235;
-    --rap-line: #202d3d;
-    --rap-line-strong: #2a3b52;
-    --rap-text: #e8edf5;
-    --rap-text-soft: #cbd7e8;
-    --rap-muted: #94a2b7;
-    --rap-placeholder: #71839c;
-    --rap-blue: #087cff;
-    --rap-blue-hover: #0068e8;
-    --rap-green: #28d889;
-    --rap-red: #ff6d79;
-    --rap-amber: #f5b942;
+
+    --rap-gray-50: 247 249 252;
+    --rap-gray-100: 232 237 245;
+    --rap-gray-200: 203 215 232;
+    --rap-gray-300: 183 196 215;
+    --rap-gray-400: 148 162 183;
+    --rap-gray-500: 113 131 156;
+    --rap-gray-600: 20 34 53;
+    --rap-gray-700: 16 27 40;
+    --rap-gray-800: 12 21 32;
+    --rap-gray-900: 7 13 22;
+    --rap-gray-950: 5 10 17;
+
+    --rap-blue-50: 237 246 255;
+    --rap-blue-100: 220 236 255;
+    --rap-blue-200: 194 224 255;
+    --rap-blue-300: 148 202 255;
+    --rap-blue-400: 85 170 255;
+    --rap-blue-500: 22 139 255;
+    --rap-blue-600: 8 124 255;
+    --rap-blue-700: 0 104 232;
+    --rap-blue-800: 0 86 199;
+    --rap-blue-900: 6 68 163;
+    --rap-blue-950: 11 46 102;
+
+    --rap-green-50: 233 255 245;
+    --rap-green-100: 209 251 231;
+    --rap-green-200: 168 244 208;
+    --rap-green-300: 112 234 178;
+    --rap-green-400: 66 222 151;
+    --rap-green-500: 40 216 137;
+    --rap-green-600: 34 185 120;
+    --rap-green-700: 27 146 95;
+    --rap-green-800: 22 111 74;
+    --rap-green-900: 16 88 58;
+    --rap-green-950: 6 53 34;
+
+    --rap-red-50: 255 240 242;
+    --rap-red-100: 255 225 229;
+    --rap-red-200: 255 195 202;
+    --rap-red-300: 255 157 168;
+    --rap-red-400: 255 109 121;
+    --rap-red-500: 255 109 121;
+    --rap-red-600: 229 83 97;
+    --rap-red-700: 194 58 73;
+    --rap-red-800: 151 42 57;
+    --rap-red-900: 115 31 43;
+    --rap-red-950: 69 15 24;
+
+    --rap-amber-50: 255 249 230;
+    --rap-amber-100: 255 240 191;
+    --rap-amber-200: 255 224 140;
+    --rap-amber-300: 255 206 91;
+    --rap-amber-400: 245 185 66;
+    --rap-amber-500: 245 185 66;
+    --rap-amber-600: 207 146 35;
+    --rap-amber-700: 161 108 23;
+    --rap-amber-800: 120 78 19;
+    --rap-amber-900: 91 57 14;
+    --rap-amber-950: 54 32 7;
+
+    --rap-border-50: var(--rap-gray-50);
+    --rap-border-100: var(--rap-gray-100);
+    --rap-border-200: var(--rap-gray-200);
+    --rap-border-300: 32 45 61;
+    --rap-border-400: 32 45 61;
+    --rap-border-500: 32 45 61;
+    --rap-border-600: 32 45 61;
+    --rap-border-700: 32 45 61;
+    --rap-border-800: 32 45 61;
+    --rap-border-900: 32 45 61;
+    --rap-border-950: 32 45 61;
+
+    --rap-black: var(--rap-gray-950);
+    --rap-bg: rgb(var(--rap-gray-900));
+    --rap-panel: rgb(var(--rap-gray-800));
+    --rap-panel-2: rgb(var(--rap-gray-700));
+    --rap-panel-3: rgb(var(--rap-gray-600));
+    --rap-line: rgb(var(--rap-border-300));
+    --rap-line-strong: rgb(var(--rap-blue-800));
+    --rap-text: rgb(var(--rap-gray-100));
+    --rap-text-soft: rgb(var(--rap-gray-200));
+    --rap-muted: rgb(var(--rap-gray-400));
+    --rap-placeholder: rgb(var(--rap-gray-500));
+    --rap-blue: rgb(var(--rap-blue-600));
+    --rap-blue-hover: rgb(var(--rap-blue-700));
+    --rap-blue-soft: rgb(var(--rap-blue-600) / 12%);
+    --rap-green: rgb(var(--rap-green-500));
+    --rap-red: rgb(var(--rap-red-400));
+    --rap-amber: rgb(var(--rap-amber-400));
+
     --rap-radius-sm: 7px;
     --rap-radius-md: 9px;
     --rap-radius-lg: 11px;
@@ -24,6 +102,12 @@
     --rap-space-3: 12px;
     --rap-space-4: 16px;
     --rap-space-5: 20px;
-    --rap-focus: 0 0 0 2px rgb(8 124 255 / 22%);
+    --rap-focus: 0 0 0 2px rgb(var(--rap-blue-600) / 22%);
     --rap-shadow-panel: 0 6px 20px rgb(0 0 0 / 13%);
+    --rap-shadow-sm: 0 1px 2px rgb(0 0 0 / 5%);
+    --rap-shadow-md: 0 5px 18px rgb(0 0 0 / 12%);
+    --rap-shadow-lg: 0 6px 20px rgb(0 0 0 / 13%);
+    --rap-shadow-xl: 0 10px 25px rgb(0 0 0 / 15%);
+    --rap-shadow-2xl: 0 16px 36px rgb(0 0 0 / 20%);
+    --rap-shadow-inner: inset 0 1px 0 rgb(255 255 255 / 2%);
 }
