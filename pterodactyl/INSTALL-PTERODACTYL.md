@@ -9,7 +9,7 @@ Rap-theme is being rebuilt using Noobee-inspired engineering patterns while reta
 - Imports the modular CSS entry from `App.tsx` after Tailwind.
 - Adds narrowly scoped data/class markers to the existing panel, input, server row, console metrics, chart and file row components.
 - Keeps Pterodactyl route handling, permission checks, API calls, websocket/console behavior, actions, and data models intact.
-- Leaves the legacy AdminLTE admin UI on its separate Blade stylesheet integration.
+- Splits the legacy AdminLTE admin UI into its own token, base, and refinement CSS files, loaded by a small Blade-linked entry stylesheet.
 - Requires no addons and does not add Backup Manager.
 
 ## Important: stage first
@@ -20,9 +20,11 @@ From the cloned Rap-theme repository, run:
 
 ```bash
 bash pterodactyl/apply-modular-theme.sh /root/pterodactyl-rapelz-staging
+# On a verified source integration rollback:
+# bash pterodactyl/rollback-modular-theme.sh /root/pterodactyl-rapelz-staging /root/rapelz-theme-rebuild-backup-YYYYMMDD-HHMMSS
 ```
 
-The script checks known source anchors, creates a backup outside the panel source (under `/root` when run as root), and patches all expected files only after verifying the source patterns. If the source differs unexpectedly, it stops instead of guessing. Record the printed backup path.
+The script checks known source anchors, creates a backup outside the panel source (under `/root` when run as root), and patches all expected files only after verifying the source patterns. It copies the React modules into `resources/scripts/assets/css/rapelz-theme/` and AdminLTE modules into `public/themes/pterodactyl/css/rapelz-admin/`. If the source differs unexpectedly, it stops instead of guessing. Record the printed backup path.
 
 Then validate the staging copy:
 
@@ -49,6 +51,8 @@ The script prints a timestamped backup directory. Restore the backed-up versions
 - `resources/views/layouts/admin.blade.php`
 - `resources/scripts/assets/css/rapelz-theme/`
 - `public/themes/pterodactyl/css/rapelz-theme.css`
+- `public/themes/pterodactyl/css/rapelz-admin/`
+- `pterodactyl/rollback-modular-theme.sh` restores source files from the printed backup path (for production rollback, requires explicit `RAPELZ_ALLOW_PRODUCTION=1`).
 
 Alternatively, in the staging copy, discard that copy and recreate it from a clean Pterodactyl 1.15.1 source tree.
 
