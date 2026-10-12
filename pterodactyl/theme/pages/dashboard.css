@@ -1,7 +1,13 @@
-/* Dashboard-only refinements. Keep selectors scoped to existing dashboard roots. */
-/* Intentionally small until verified against the exact 1.15.1 DOM. */
-@media (max-width: 767px) {
-    #app :where(table) {
-        max-width: 100%;
-    }
+[data-rapelz-component="server-row"] {
+    border-color: var(--rap-line);
+    transition: border-color .15s ease, background-color .15s ease;
+}
+
+[data-rapelz-component="server-row"]:hover {
+    border-color: var(--rap-line-strong);
+}
+
+[data-rapelz-component="server-row"]:focus-visible {
+    outline: 2px solid var(--rap-blue);
+    outline-offset: 2px;
 }
