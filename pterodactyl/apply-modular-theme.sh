@@ -21,10 +21,10 @@ fi
 
 PANEL_DIR="$(cd -- "$PANEL_DIR" && pwd -P)"
 case "$PANEL_DIR" in
-    /var/www/pterodactyl|/var/www/pterodactyl/*)
+    /var/www/*)
         if [[ "${RAPELZ_ALLOW_PRODUCTION:-0}" != "1" ]]; then
-            echo "ERROR: production path refused: $PANEL_DIR"
-            echo "Run this on the staging copy first. Production requires explicit RAPELZ_ALLOW_PRODUCTION=1."
+            echo "ERROR: web-root path refused by default: $PANEL_DIR"
+            echo "Run this on the staging copy first. Web-root installs require explicit RAPELZ_ALLOW_PRODUCTION=1."
             exit 10
         fi
         ;;
