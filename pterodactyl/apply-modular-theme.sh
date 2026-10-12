@@ -65,7 +65,7 @@ if ! grep -q "import '@/assets/tailwind.css';" "$PANEL_DIR/resources/scripts/com
     exit 5
 fi
 
-if [[ ! -s "$SCRIPT_DIR/theme/entry.css" || ! -s "$SCRIPT_DIR/admin-theme.css" || ! -s "$SCRIPT_DIR/admin/tokens.css" || ! -s "$SCRIPT_DIR/admin/base.css" || ! -s "$SCRIPT_DIR/admin/refinements.css" ]]; then
+if [[ ! -s "$SCRIPT_DIR/theme/entry.css" || ! -s "$SCRIPT_DIR/theme/tokens.css" || ! -s "$SCRIPT_DIR/admin-theme.css" || ! -s "$SCRIPT_DIR/admin/base.css" || ! -s "$SCRIPT_DIR/admin/refinements.css" ]]; then
     echo "ERROR: React or modular AdminLTE stylesheet files are missing from the rap-theme repository."
     exit 6
 fi
@@ -440,6 +440,7 @@ install -m 0644 "$SCRIPT_DIR/admin-theme.css" "$PANEL_DIR/public/themes/pterodac
 DEST_ADMIN="$PANEL_DIR/public/themes/pterodactyl/css/rapelz-admin"
 rm -rf "$DEST_ADMIN"
 mkdir -p "$DEST_ADMIN"
+install -m 0644 "$SCRIPT_DIR/theme/tokens.css" "$DEST_ADMIN/tokens.css"
 cp -a "$SCRIPT_DIR/admin/." "$DEST_ADMIN/"
 
 echo
