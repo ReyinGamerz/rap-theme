@@ -1,8 +1,13 @@
-/* File manager: preserve Pterodactyl's file actions and responsive layout. */
-/* Add more selectors only after validating the actual 1.15.1 component markup. */
-@media (max-width: 767px) {
-    #app :where(pre) {
-        max-width: 100%;
-        overflow-x: auto;
-    }
+.rapelz-file-row {
+    border: 1px solid transparent;
+    transition: background-color .12s ease, border-color .12s ease;
+}
+
+.rapelz-file-row:hover {
+    border-color: var(--rap-line);
+}
+
+.rapelz-file-row:focus-within {
+    outline: 2px solid var(--rap-blue);
+    outline-offset: 1px;
 }
