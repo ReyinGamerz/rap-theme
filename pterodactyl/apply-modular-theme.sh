@@ -326,6 +326,20 @@ if new_import not in text:
     )
 changes[rel] = text
 
+# Add an explicit server-empty hint for root admins to distinguish the stored switch filter.
+rel = "resources/scripts/components/dashboard/DashboardContainer.tsx"
+text = read(rel)
+empty_marker = "RAPELZ_EMPTY_SERVER_HINT"
+if empty_marker not in text:
+    text = replace_once(
+        text,
+        r"(\{showOnlyAdmin\s*\?\s*'There are no other servers to display\.'\s*:\s*'There are no servers associated with your account\.'\})",
+        lambda m: "{/* " + empty_marker + " */}\n                                " + m.group(1) + "\n                                {!showOnlyAdmin && rootAdmin && (\n                                    <p css={tw`mt-2 text-xs text-neutral-500`}>\n                                        Admin-created servers may belong to another account. Turn on &quot;Showing others&apos; servers&quot; to inspect them.\n                                    </p>\n                                )}",
+        rel,
+        flags=re.S,
+    )
+    changes[rel] = text
+
 # Add narrowly scoped markers to the existing reusable components. The
 # components retain Pterodactyl behavior, types, actions, and data flow.
 patches = [
