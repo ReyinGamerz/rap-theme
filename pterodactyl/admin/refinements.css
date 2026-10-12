@@ -32,10 +32,23 @@ body.skin-blue { background: var(--rap-bg); color: var(--rap-text); }
     border-radius: 7px;
     border-left: 0;
 }
-.skin-blue .sidebar-menu > li:hover > a,
+.skin-blue .sidebar-menu > li:hover > a {
+    background: rgb(8 124 255 / 10%);
+    color: #fff;
+}
 .skin-blue .sidebar-menu > li.active > a {
     background: linear-gradient(100deg, rgb(8 124 255 / 24%), rgb(8 124 255 / 8%));
     color: #fff;
+    box-shadow: inset 2px 0 0 var(--rap-blue);
+}
+/* AdminLTE's active class is route-driven; do not style focus or stale hover as active. */
+.skin-blue .sidebar-menu > li > a:focus {
+    color: #fff;
+}
+.skin-blue .sidebar-menu > li.active > a,
+.skin-blue .sidebar-menu > li.active > a:hover,
+.skin-blue .sidebar-menu > li.active > a:focus {
+    background: linear-gradient(100deg, rgb(8 124 255 / 24%), rgb(8 124 255 / 8%));
     box-shadow: inset 2px 0 0 var(--rap-blue);
 }
 .skin-blue .sidebar-menu > li > .treeview-menu {
