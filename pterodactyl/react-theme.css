@@ -114,3 +114,77 @@ hr { border-color: var(--rap-line) !important; }
 
 /* Small-screen safety: avoid forcing fixed widths or changing app layout. */
 img, canvas, video { max-width: 100%; }
+
+
+/* === Rapelz Hosting visual refinement ===
+ * Inspired by the supplied dashboard reference: dense navy surfaces,
+ * crisp borders, restrained blue glow, compact controls and readable tables.
+ * CSS only: no new features or changes to Pterodactyl behavior.
+ */
+:root {
+    --rap-bg: #070d16;
+    --rap-panel: #0c1520;
+    --rap-panel-2: #101b28;
+    --rap-panel-3: #142235;
+    --rap-line: #202d3d;
+    --rap-text: #e8edf5;
+    --rap-muted: #94a2b7;
+    --rap-blue: #087cff;
+    --rap-blue-hover: #0068e8;
+    --rap-green: #28d889;
+    --rap-radius: 9px;
+}
+
+body, #app { font-feature-settings: "ss01" on; }
+#app { overflow-x: clip; }
+button, input, select, textarea { font: inherit; }
+button, [role="button"], a[class*="button"] { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 2px solid rgba(8,124,255,.85);
+    outline-offset: 2px;
+}
+
+/* Keep the premium dark canvas consistent across React routes. */
+[class*="bg-neutral-950"], [class*="bg-gray-950"],
+[class*="bg-[#"] { background-color: var(--rap-bg); }
+[class*="shadow"] { --tw-shadow-color: rgb(0 0 0 / 22%); }
+[class*="rounded-lg"], [class*="rounded-xl"], [class*="rounded-2xl"] {
+    border-radius: var(--rap-radius);
+}
+[class*="border"] { border-color: var(--rap-line); }
+
+/* Compact, layered panels like the reference dashboard. */
+[class*="bg-neutral-900"], [class*="bg-gray-900"],
+[class*="bg-neutral-800"], [class*="bg-gray-800"] {
+    background-image: linear-gradient(145deg, rgb(255 255 255 / 1.8%), transparent 42%);
+}
+[class*="border"][class*="rounded"] {
+    box-shadow: 0 5px 18px rgb(0 0 0 / 10%);
+}
+table thead th {
+    font-size: .72rem;
+    letter-spacing: .035em;
+    text-transform: uppercase;
+}
+table tbody td { vertical-align: middle; }
+table tbody tr { transition: background-color .12s ease; }
+
+/* Inputs, dropdowns and buttons share the same compact control language. */
+input, textarea, select {
+    min-height: 2.5rem;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 2%);
+}
+button { border-radius: 7px; }
+button:active { transform: translateY(1px); }
+[class*="bg-blue-600"], [class*="bg-primary-"] {
+    box-shadow: 0 3px 10px rgb(8 124 255 / 12%);
+}
+
+/* Mobile: never let a long table or code pane widen the whole page. */
+@media (max-width: 767px) {
+    html, body, #app { max-width: 100%; overflow-x: clip; }
+    #app > div { max-width: 100%; }
+    table { min-width: 0; }
+    pre, code { overflow-wrap: anywhere; }
+    .xterm, .xterm-screen { max-width: 100%; }
+}
