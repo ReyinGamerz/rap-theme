@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080e18"><title>Rapelz Hosting — Backup Manager</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="#" aria-label="Rapelz Hosting home"><span class="brand-mark">♛</span><span>Rapelz Hosting</span></a>
+  <div class="side-scroll">
+    <div class="nav-group">
+      <a class="nav-item" href="#"><span>⌂</span> Dashboard</a><a class="nav-item" href="#"><span>▤</span> Servers</a><a class="nav-item" href="#"><span>♙</span> Users</a><a class="nav-item" href="#"><span>▦</span> Nodes</a><a class="nav-item" href="#"><span>✣</span> Allocations</a><a class="nav-item" href="#"><span>◷</span> Schedules</a><a class="nav-item" href="#"><span>▤</span> Databases</a><a class="nav-item" href="#"><span>↯</span> Activity</a>
+    </div>
+    <div class="nav-label">MANAGEMENT</div>
+    <a class="nav-item active" href="#overview"><span>▣</span> Backup Manager</a>
+    <div class="subnav"><a class="nav-item selected" href="#overview" data-tab="overview">◉ &nbsp; Overview</a><a class="nav-item" href="#backups" data-tab="backups">▤ &nbsp; Backups</a><a class="nav-item" href="#restore" data-tab="restore">◴ &nbsp; Restore Center</a><a class="nav-item" href="#nodes" data-tab="nodes">⌘ &nbsp; Node & Migration</a><a class="nav-item" href="#schedules" data-tab="schedules">◷ &nbsp; Schedules</a><a class="nav-item" href="#reports" data-tab="reports">▥ &nbsp; Reports</a><a class="nav-item" href="#settings" data-tab="settings">⚙ &nbsp; Settings</a></div>
+    <a class="nav-item" href="#configuration"><span>⚙</span> Configuration <span class="chevron">›</span></a>
+  </div>
+  <div class="sidebar-footer"><span class="avatar small">R</span><div><b>Rapelz Hosting</b><small>Backup Service · Demo</small></div><span class="dot green"></span></div>
+</aside>
+<main class="main">
+<header class="topbar"><button class="icon-btn mobile-menu" id="menuToggle" aria-label="Toggle menu">☰</button><label class="global-search">⌕ <input id="globalSearch" placeholder="Search nodes, backups, servers, UUID..."><kbd>Ctrl K</kbd></label><div class="top-actions"><button class="icon-btn" aria-label="Notifications">♧ <span class="notification">3</span></button><span class="avatar">R</span><div class="admin"><b>Rapelz Admin</b><small>Administrator</small></div><span>⌄</span></div></header>
+<div class="content">
+<section class="page-heading"><div class="heading-left"><div class="heading-icon">▤</div><div><h1>Backup Manager</h1><p>Kelola backup Panel dan semua Node Rapelz Hosting</p></div></div><div class="heading-actions"><div class="drive-pill"><span class="drive-logo">▲</span><span>Google Drive</span><span class="pill green">● Connected</span></div><button class="btn primary" id="backupNow">⇧ &nbsp; Backup Sekarang <span class="btn-divider">⌄</span></button></div></section>
+<nav class="tabs" aria-label="Backup sections"><a class="tab active" href="#overview" data-tab="overview">◉ &nbsp; Overview</a><a class="tab" href="#backups" data-tab="backups">▤ &nbsp; Backups</a><a class="tab" href="#restore" data-tab="restore">⟳ &nbsp; Restore Center</a><a class="tab" href="#nodes" data-tab="nodes">⌘ &nbsp; Node & Migration</a><a class="tab" href="#schedules" data-tab="schedules">◷ &nbsp; Schedules</a><a class="tab" href="#reports" data-tab="reports">▥ &nbsp; Reports</a><a class="tab" href="#settings" data-tab="settings">⚙ &nbsp; Settings</a></nav>
+<div class="demo-banner"><span>ⓘ</span> Preview mode — angka dan backup di halaman ini adalah data simulasi, belum terhubung ke server produksi.</div>
+<section class="stats-grid">
+  <article class="stat-card"><div class="stat-icon blue">▤</div><div class="stat-main"><span class="muted">Total Backup</span><strong>142 <em class="trend">↑ 12%</em></strong><small>Dalam 30 hari terakhir</small></div></article>
+  <article class="stat-card"><div class="stat-icon pale">▱</div><div class="stat-main"><span class="muted">Ukuran Penyimpanan</span><strong>48.7 GB</strong><small>dari kuota Google Drive</small><div class="progress"><i style="width:9.7%"></i></div><small class="split"><span>48.7 GB / 500 GB</span><span>9.7%</span></small></div></article>
+  <article class="stat-card"><div class="stat-icon green-icon">▣</div><div class="stat-main"><span class="muted">Panel Backup</span><b class="stat-note">Terakhir: 5 jam lalu</b><small class="success">● Berhasil</small><button class="btn subtle full" id="panelBackup">⇧ &nbsp; Backup Sekarang</button></div></article>
+  <article class="stat-card"><div class="stat-icon green-icon">▤</div><div class="stat-main"><span class="muted">Node Online</span><strong>3 / 3</strong><small>Node aktif</small><span class="pill green compact">↑ Semua Online</span></div></article>
+  <article class="stat-card"><div class="stat-icon shield">⬟</div><div class="stat-main"><span class="muted">Status Sistem</span><strong class="success">Normal</strong><small>Semua layanan berjalan dengan baik</small><button class="btn subtle full" data-tab="reports">Lihat Detail</button></div></article>
+</section>
+<section class="workspace" id="backups">
+  <aside class="filter-card card"><div class="section-title"><span class="title-icon">▽</span><div><h2>Filter Backup</h2><small>Persempit daftar sesuai kebutuhan</small></div></div>
+    <div class="field-row"><label class="field">Tipe Backup<select id="typeFilter"><option value="all">Semua Tipe</option><option value="Panel">Panel</option><option value="Node">Node</option><option value="Server">Server (Pelanggan)</option><option value="Database">Database</option><option value="File">File/Configuration</option></select></label><label class="field">Pilih Node<select id="nodeFilter"><option value="all">Semua Node</option><option value="panel">Panel</option><option value="node-001">Node 1 (node-1.rapelz.my.id)</option><option value="node-002">Node 2 (node-2.rapelz.my.id)</option><option value="node-003">Node 3 (node-3.rapelz.my.id)</option></select><div class="node-counts"><button data-node="all"><span class="dot blue-dot"></span> Semua Node <b>142</b></button><button data-node="panel"><span class="dot blue-dot"></span> Panel <b>26</b></button><button data-node="node-001"><span class="dot green"></span> Node 1 <b>42</b></button><button data-node="node-002"><span class="dot orange"></span> Node 2 <b>36</b></button><button data-node="node-003"><span class="dot purple"></span> Node 3 <b>36</b></button></div></label></div>
+    <label class="field">Rentang Tanggal<input id="dateFilter" type="date" aria-label="Tanggal mulai filter"></label>
+    <label class="field">Status<select id="statusFilter"><option value="all">Semua Status</option><option value="success">Berhasil</option><option value="failed">Gagal</option><option value="running">Berjalan</option></select></label>
+    <label class="field">Cari<input id="searchFilter" placeholder="⌕  UUID, nama server, atau kata kunci..."></label>
+    <div class="filter-actions"><button class="btn subtle" id="resetFilters">Reset Filter</button><button class="btn primary" id="applyFilters">Terapkan Filter</button></div>
+  </aside>
+  <section class="backup-card card"><div class="card-header"><div class="section-title"><span class="title-icon">▤</span><div><h2>Daftar Backup</h2><small id="resultSummary">Menampilkan backup simulasi</small></div></div><div class="table-actions"><button class="btn subtle" id="refresh">⟳ &nbsp; Refresh</button><select id="sortFilter" aria-label="Urutan"><option value="newest">Terbaru</option><option value="oldest">Terlama</option><option value="size">Ukuran terbesar</option></select></div></div>
+  <div class="table-wrap"><table><thead><tr><th><input type="checkbox" id="selectAll" aria-label="Pilih semua yang tampil"></th><th>TANGGAL</th><th>TIPE</th><th>NAMA / SUMBER</th><th>NODE</th><th>UKURAN</th><th>STATUS</th><th>AKSI</th></tr></thead><tbody id="backupRows"></tbody></table><div id="emptyState" class="empty-state" hidden>Tidak ada backup yang cocok dengan filter.</div></div>
+  <div class="table-footer"><div class="pagination"><button id="prevPage" aria-label="Previous page">‹</button><span id="pageLabel">1 / 1</span><button id="nextPage" aria-label="Next page">›</button></div><small id="pageSummary">Menampilkan 0 backup</small></div>
+  </section>
+</section>
+<section class="bottom-grid" id="overview">
+  <article class="card schedule-card"><div class="card-header"><div class="section-title"><span class="clock-icon">◷</span><div><h2>Jadwal Backup</h2><small>Jadwal demo · WIB</small></div></div><button class="btn subtle" data-tab="schedules">Kelola Jadwal</button></div><div id="scheduleRows"></div></article>
+  <article class="card storage-card"><div class="card-header"><div class="section-title"><span class="drive-logo large">▲</span><div><h2>Penyimpanan Google Drive</h2><small>Ringkasan penyimpanan demo</small></div></div><button class="btn subtle" data-tab="settings">Kelola</button></div><div class="progress large-progress"><i style="width:9.7%"></i></div><div class="storage-label"><span>48.7 GB dari 500 GB digunakan</span><b>9.7%</b></div><div class="storage-legend"><span><i class="legend-blue"></i> Panel <b>4.2 GB (8.6%)</b></span><span><i class="legend-muted"></i> Node <b>41.3 GB (84.8%)</b></span><span><i class="legend-green"></i> Lainnya <b>3.2 GB (6.6%)</b></span></div><div class="drive-status"><span>◷ &nbsp; Terakhir diperiksa: 12 Okt 2026, 07:15 WIB</span><span class="pill green">● Connected</span></div></article>
+  <article class="card activity-card"><div class="card-header"><div class="section-title"><span class="clock-icon">◷</span><div><h2>Aktivitas Terbaru</h2><small>Pekerjaan terakhir</small></div></div><button class="btn subtle" data-tab="reports">Lihat Semua</button></div><div class="activity-row"><span class="activity-symbol">▤</span><span>Backup Panel berhasil</span><small>5 jam lalu</small></div><div class="activity-row"><span class="activity-symbol success">●</span><span>Backup Node 1 berhasil</span><small>5 jam lalu</small></div><div class="activity-row"><span class="activity-symbol success">●</span><span>Backup Node 2 berhasil</span><small>4 jam lalu</small></div><div class="activity-row"><span class="activity-symbol success">●</span><span>Backup Node 3 berhasil</span><small>4 jam lalu</small></div><div class="activity-row"><span class="activity-symbol success">●</span><span>Upload ke Google Drive berhasil</span><small>5 jam lalu</small></div></article>
+</section>
+<section class="placeholder-panel card" id="otherPanel" hidden><div class="section-title"><span class="title-icon">◈</span><div><h2 id="otherTitle">Section</h2><small>Prototype navigasi</small></div></div><p id="otherDescription">Bagian ini akan terhubung ke backend Rapelz setelah integrasi.</p><div class="notice">Fitur operasional seperti restore, migrasi, dan konfigurasi kredensial belum dijalankan dari prototype ini.</div></section>
+<footer>Rapelz Hosting · Backup Manager UI prototype <span>Dark UI · Responsive · Demo data</span></footer>
+</div></main></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="app.js"></script>
+</body></html>
