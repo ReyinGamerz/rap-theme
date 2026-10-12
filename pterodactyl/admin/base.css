@@ -11,8 +11,16 @@ body.skin-blue, body.skin-blue .content-wrapper, body.skin-blue .right-side {
 .skin-blue .main-header .logo { color: var(--rap-text); border-bottom: 1px solid var(--rap-line); }
 .skin-blue .sidebar-menu > li.header { background: transparent; color: var(--rap-muted); }
 .skin-blue .sidebar-menu > li > a { color: #c4cede; transition: background-color .15s ease, color .15s ease; }
-.skin-blue .sidebar-menu > li:hover > a, .skin-blue .sidebar-menu > li.active > a {
-    color: #fff; background: #101f33; border-left-color: var(--rap-blue);
+.skin-blue .sidebar-menu > li:hover > a {
+    color: #fff;
+    background: rgb(8 124 255 / 10%);
+}
+.skin-blue .sidebar-menu > li.active > a,
+.skin-blue .sidebar-menu > li.active > a:hover,
+.skin-blue .sidebar-menu > li.active > a:focus {
+    color: #fff;
+    background: linear-gradient(100deg, rgb(8 124 255 / 24%), rgb(8 124 255 / 8%));
+    border-left-color: var(--rap-blue);
 }
 .skin-blue .main-header .navbar .sidebar-toggle:hover { background: #152338; }
 .content-header > h1, .content-header > h1 > small { color: var(--rap-text); }
