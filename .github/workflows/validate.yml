@@ -93,7 +93,7 @@ jobs:
           const fs = require('fs');
           const path = require('path');
           const tokenText = fs.readFileSync('pterodactyl/theme/tokens.css', 'utf8');
-          const declared = new Set([...tokenText.matchAll(/(--rap-[\\w-]+)\\s*:/g)].map(m => m[1]));
+          const declared = new Set([...tokenText.matchAll(/(--rap-[\w-]+)\s*:/g)].map(m => m[1]));
           function cssFiles(dir) {
             return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
               const full = path.join(dir, entry.name);
@@ -108,7 +108,7 @@ jobs:
           let unresolved = 0;
           for (const file of sources) {
             const css = fs.readFileSync(file, 'utf8');
-            for (const match of css.matchAll(/var\\(\\s*(--rap-[\\w-]+)/g)) {
+            for (const match of css.matchAll(/var\(\s*(--rap-[\w-]+)/g)) {
               if (!declared.has(match[1])) {
                 console.error('Undefined Rapelz design token:', match[1], 'used in', file);
                 unresolved += 1;
