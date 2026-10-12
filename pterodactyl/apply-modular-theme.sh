@@ -236,15 +236,15 @@ patches = [
     (
         "resources/scripts/components/elements/ContentBox.tsx",
         'data-rapelz-component="content-panel"',
-        r"<div css=\{\[tw.*?!!borderColor.*?\]\}>",
-        lambda m: m.group(0).replace("<div ", '<div data-rapelz-component="content-panel" ', 1),
+        r"<div css=(\{\[tw.*?!!borderColor.*?\]\})>",
+        lambda m: "<div\n            data-rapelz-component='content-panel'\n            css=" + m.group(1) + "\n        >",
         re.S,
     ),
     (
         "resources/scripts/components/elements/TitledGreyBox.tsx",
         'data-rapelz-component="titled-panel"',
         r"<div css=\{tw.*?className=\{className\}>",
-        lambda m: m.group(0).replace("<div ", '<div data-rapelz-component="titled-panel" ', 1),
+        lambda m: m.group(0).replace("<div ", "<div data-rapelz-component='titled-panel' ", 1),
         re.S,
     ),
     (
@@ -271,9 +271,9 @@ patches = [
     (
         "resources/scripts/components/dashboard/ServerRow.tsx",
         'data-rapelz-component="server-row"',
-        r'className=\{className\}\s+\$status=\{stats\?\.status\}',
-        'className={className} data-rapelz-component="server-row" $status={stats?.status}',
-        0,
+        r"<StatusIndicatorBox as=\{Link\} to=\{.*?server\.id.*?\}\s+className=\{className\}\s+\$status=\{stats\?\.status\}>",
+        lambda m: "<StatusIndicatorBox\n            as={Link}\n            to={" + chr(96) + "/server/" + chr(36) + "{server.id}" + chr(96) + "}\n            className={className}\n            data-rapelz-component='server-row'\n            $status={stats?.status}\n        >",
+        re.S,
     ),
     (
         "resources/scripts/components/server/console/StatBlock.tsx",
