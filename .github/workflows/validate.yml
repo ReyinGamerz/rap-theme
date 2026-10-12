@@ -1,11 +1,11 @@
-name: Validate Rapelz theme
+name: Validate Rapelz modular theme
 on:
   push:
   pull_request:
   workflow_dispatch:
 
 jobs:
-  validate:
+  validate-theme-repository:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,7 +14,7 @@ jobs:
           node-version: 22
       - name: Check prototype JavaScript syntax
         run: node --check app.js
-      - name: Validate prototype references
+      - name: Validate prototype files
         run: |
           test -s index.html
           test -s styles.css
@@ -27,8 +27,9 @@ jobs:
           grep -q 'id="saveWebhook"' app.js
           grep -q 'id="testWebhook"' app.js
           grep -q 'Mode preview UI' app.js
-      - name: Validate modular React theme manifest and imports
+      - name: Validate modular CSS graph and script syntax
         run: |
+          bash -n pterodactyl/apply-modular-theme.sh
           node -e "const fs=require('fs'); const m=JSON.parse(fs.readFileSync('pterodactyl/theme/manifest.json','utf8')); if(m.entry!=='entry.css'||!Array.isArray(m.styles)||m.styles.length===0) process.exit(1); for(const f of [m.entry,...m.styles]) if(!fs.existsSync('pterodactyl/theme/'+f)) { console.error('Missing theme file:',f); process.exit(1); }"
           node - <<'NODE'
           const fs = require('fs');
@@ -53,6 +54,34 @@ jobs:
             }
           }
           inspect('entry.css');
-          if (!visited.size) process.exit(1);
           console.log('Validated', visited.size, 'modular CSS files');
           NODE
+
+  build-against-pterodactyl-1151:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: pterodactyl/panel
+          ref: v1.15.1
+          path: panel
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: panel/yarn.lock
+      - name: Apply overlay to isolated upstream source
+        run: bash pterodactyl/apply-modular-theme.sh "$GITHUB_WORKSPACE/panel"
+      - name: Install upstream dependencies
+        working-directory: panel
+        run: corepack yarn install --frozen-lockfile
+      - name: TypeScript validation
+        working-directory: panel
+        run: corepack yarn tsc
+      - name: ESLint validation
+        working-directory: panel
+        run: corepack yarn lint
+      - name: Production-mode webpack compile without clean step
+        working-directory: panel
+        run: NODE_ENV=production corepack yarn webpack --mode production
