@@ -80,6 +80,7 @@
     --rap-bg: rgb(var(--rap-gray-900));
     --rap-panel: rgb(var(--rap-gray-800));
     --rap-panel-2: rgb(var(--rap-gray-700));
+    --rap-panel-alt: rgb(var(--rap-gray-700));
     --rap-panel-3: rgb(var(--rap-gray-600));
     --rap-line: rgb(var(--rap-border-300));
     --rap-line-strong: rgb(var(--rap-blue-800));
