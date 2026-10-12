@@ -1,4 +1,4 @@
-/* Console terminal has its own ANSI palette; don't recolor its descendants. */
+/* Preserve xterm ANSI output colors; customize only the terminal canvas/scrollbar. */
 .xterm,
 .xterm-screen,
 .xterm-viewport {
