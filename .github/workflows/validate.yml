@@ -55,7 +55,31 @@ jobs:
             }
           }
           inspect('entry.css');
-          console.log('Validated', visited.size, 'modular CSS files');
+          console.log('Validated', visited.size, 'modular React CSS files');
+
+          // AdminLTE styles are split into source files in pterodactyl/admin,
+          // then copied as rapelz-admin/ next to the deployed entry stylesheet.
+          const adminEntry = fs.readFileSync('pterodactyl/admin-theme.css', 'utf8');
+          const adminVisited = new Set();
+          for (const match of adminEntry.matchAll(/@import\\s+(?:url\\()?['"]([^'"]+)['"]\\)?\\s*;/g)) {
+            const target = match[1];
+            const expected = target.startsWith('rapelz-admin/')
+              ? path.join('pterodactyl/admin', target.slice('rapelz-admin/'.length))
+              : path.join('pterodactyl', target);
+            if (!fs.existsSync(expected)) {
+              console.error('Missing AdminLTE CSS import:', target, 'expected source:', expected);
+              process.exitCode = 1;
+            } else {
+              adminVisited.add(expected);
+            }
+          }
+          for (const f of ['tokens.css', 'base.css', 'refinements.css']) {
+            if (!adminVisited.has(path.join('pterodactyl/admin', f))) {
+              console.error('AdminLTE stylesheet is not imported:', f);
+              process.exitCode = 1;
+            }
+          }
+          console.log('Validated', adminVisited.size, 'modular AdminLTE CSS files');
           NODE
 
   build-against-pterodactyl-1151:
