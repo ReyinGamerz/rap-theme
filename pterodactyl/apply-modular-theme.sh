@@ -394,6 +394,12 @@ patches = [
     ),
 ]
 
+# Repair the malformed className emitted by the early v2 overlay if this installer is re-applied.
+rel = "resources/scripts/components/server/files/FileObjectRow.tsx"
+text = changes.get(rel, read(rel))
+text = text.replace("className={`{styles.file_row} rapelz-file-row`}", "className={`${styles.file_row} rapelz-file-row`}")
+changes[rel] = text
+
 for rel, marker, pattern, replacement, flags in patches:
     text = changes.get(rel, read(rel))
     if marker in text:
