@@ -123,11 +123,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/checkout@v4
         with:
           repository: pterodactyl/panel
           ref: v1.15.1
           path: panel
+      - uses: actions/checkout@v4
+        with:
+          repository: pterodactyl/panel
+          ref: v1.15.1
+          path: panel-upgrade
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -141,6 +148,22 @@ jobs:
           bash pterodactyl/apply-modular-theme.sh "$GITHUB_WORKSPACE/panel"
           git -C panel diff --binary > /tmp/rapelz-overlay-second.diff
           diff -u /tmp/rapelz-overlay-first.diff /tmp/rapelz-overlay-second.diff
+      - name: Verify upgrade from legacy v1 overlay
+        run: |
+          mkdir -p "$RUNNER_TEMP/rapelz-overlay-v1"
+          ln -s "$GITHUB_WORKSPACE/pterodactyl/theme" "$RUNNER_TEMP/rapelz-overlay-v1/theme"
+          ln -s "$GITHUB_WORKSPACE/pterodactyl/admin-theme.css" "$RUNNER_TEMP/rapelz-overlay-v1/admin-theme.css"
+          git -C "$GITHUB_WORKSPACE" show e39e7e2e218d3c601282a7b982c49828cfb5fd46:pterodactyl/apply-modular-theme.sh > "$RUNNER_TEMP/rapelz-overlay-v1/apply-modular-theme.sh"
+          bash "$RUNNER_TEMP/rapelz-overlay-v1/apply-modular-theme.sh" "$GITHUB_WORKSPACE/panel-upgrade"
+          bash pterodactyl/apply-modular-theme.sh "$GITHUB_WORKSPACE/panel-upgrade"
+          grep -q 'RAPELZ THEME TOKENS v2' "$GITHUB_WORKSPACE/panel-upgrade/tailwind.config.js"
+          if grep -q 'RAPELZ THEME TOKENS v1' "$GITHUB_WORKSPACE/panel-upgrade/tailwind.config.js"; then
+            echo "Legacy theme token marker was not upgraded."
+            exit 1
+          fi
+          test -f "$GITHUB_WORKSPACE/panel-upgrade/public/themes/pterodactyl/css/rapelz-admin/tokens.css"
+          test -f "$GITHUB_WORKSPACE/panel-upgrade/public/themes/pterodactyl/css/rapelz-admin/base.css"
+          test -f "$GITHUB_WORKSPACE/panel-upgrade/public/themes/pterodactyl/css/rapelz-admin/refinements.css"
       - name: Install upstream dependencies
         working-directory: panel
         run: corepack yarn install --frozen-lockfile
