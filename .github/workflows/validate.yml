@@ -20,5 +20,5 @@ jobs:
           test -s app.js
           grep -q 'id="backupRows"' index.html
           grep -q 'id="nodeFilter"' index.html
-          grep -q 'id="restore"' index.html
+          grep -q 'href="#restore"' index.html
           grep -q 'id="toast"' index.html
