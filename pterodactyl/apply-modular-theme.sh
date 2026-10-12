@@ -204,6 +204,7 @@ const rapelzBorder = {
     900: 'rgb(var(--rap-border-900) / <alpha-value>)',
     950: 'rgb(var(--rap-border-950) / <alpha-value>)',
 };
+"""
     text = replace_once(
         text,
         r"const colors = require\('tailwindcss/colors'\);\s*const gray = \{.*?\n\};",
@@ -243,7 +244,7 @@ const rapelzBorder = {
     text = replace_once(
         text,
         r"(\s*fontSize:\s*\{)",
-        lambda m: "\n            borderRadius: {\n                DEFAULT: '9px',\n                none: '0px',\n                sm: '7px',\n                md: '9px',\n                lg: '9px',\n                xl: '9px',\n                '2xl': '11px',\n                full: '9999px',\n            },\n            boxShadow: {\n                sm: '0 1px 2px rgb(0 0 0 / 5%)',\n                DEFAULT: '0 4px 14px rgb(0 0 0 / 12%)',\n                md: '0 5px 18px rgb(0 0 0 / 12%)',\n                lg: '0 6px 20px rgb(0 0 0 / 13%)',\n                xl: '0 10px 25px rgb(0 0 0 / 15%)',\n                '2xl': '0 16px 36px rgb(0 0 0 / 20%)',\n                inner: 'inset 0 1px 0 rgb(255 255 255 / 2%)',\n                none: 'none',\n            },\n            " + m.group(1),
+        lambda m: "\n            borderRadius: {\n                DEFAULT: 'var(--rap-radius-md)',\n                none: '0px',\n                sm: 'var(--rap-radius-sm)',\n                md: 'var(--rap-radius-md)',\n                lg: 'var(--rap-radius-md)',\n                xl: 'var(--rap-radius-md)',\n                '2xl': 'var(--rap-radius-lg)',\n                full: '9999px',\n            },\n            boxShadow: {\n                sm: 'var(--rap-shadow-sm)',\n                DEFAULT: 'var(--rap-shadow-md)',\n                md: 'var(--rap-shadow-md)',\n                lg: 'var(--rap-shadow-lg)',\n                xl: 'var(--rap-shadow-xl)',\n                '2xl': 'var(--rap-shadow-2xl)',\n                inner: 'var(--rap-shadow-inner)',\n                none: 'none',\n            },\n            "+ m.group(1),
         rel,
     )
     changes[rel] = text
