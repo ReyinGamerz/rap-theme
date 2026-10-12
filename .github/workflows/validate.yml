@@ -64,9 +64,11 @@ jobs:
           const adminVisited = new Set();
           for (const match of adminEntry.matchAll(/@import\s+(?:url\()?['"]([^'"]+)['"]\)?\s*;/g)) {
             const target = match[1];
-            const expected = target.startsWith('rapelz-admin/')
-              ? path.join('pterodactyl/admin', target.slice('rapelz-admin/'.length))
-              : path.join('pterodactyl', target);
+            const expected = target === 'rapelz-admin/tokens.css'
+              ? 'pterodactyl/theme/tokens.css'
+              : target.startsWith('rapelz-admin/')
+                ? path.join('pterodactyl/admin', target.slice('rapelz-admin/'.length))
+                : path.join('pterodactyl', target);
             if (!fs.existsSync(expected)) {
               console.error('Missing AdminLTE CSS import:', target, 'expected source:', expected);
               process.exitCode = 1;
@@ -74,9 +76,14 @@ jobs:
               adminVisited.add(expected);
             }
           }
-          for (const f of ['tokens.css', 'base.css', 'refinements.css']) {
-            if (!adminVisited.has(path.join('pterodactyl/admin', f))) {
-              console.error('AdminLTE stylesheet is not imported:', f);
+          const adminSources = {
+            'tokens.css': 'pterodactyl/theme/tokens.css',
+            'base.css': 'pterodactyl/admin/base.css',
+            'refinements.css': 'pterodactyl/admin/refinements.css',
+          };
+          for (const [name, source] of Object.entries(adminSources)) {
+            if (!adminVisited.has(source)) {
+              console.error('AdminLTE stylesheet is not imported:', name);
               process.exitCode = 1;
             }
           }
