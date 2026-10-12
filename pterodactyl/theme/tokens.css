@@ -1,0 +1,30 @@
+/* Rapelz design tokens — keep the existing brand identity. */
+:root {
+    color-scheme: dark;
+    --rap-bg: #070d16;
+    --rap-surface: #0c1520;
+    --rap-surface-raised: #101b28;
+    --rap-surface-active: #142235;
+    --rap-border: #202d3d;
+    --rap-border-strong: #2a3b52;
+    --rap-text: #e8edf5;
+    --rap-text-soft: #c4cede;
+    --rap-muted: #94a2b7;
+    --rap-placeholder: #71839c;
+    --rap-blue: #087cff;
+    --rap-blue-hover: #0068e8;
+    --rap-blue-soft: rgb(8 124 255 / 12%);
+    --rap-green: #28d889;
+    --rap-red: #ff6d79;
+    --rap-amber: #f5b942;
+    --rap-radius-sm: 7px;
+    --rap-radius-md: 9px;
+    --rap-radius-lg: 11px;
+    --rap-space-1: 4px;
+    --rap-space-2: 8px;
+    --rap-space-3: 12px;
+    --rap-space-4: 16px;
+    --rap-space-5: 20px;
+    --rap-focus: 0 0 0 2px rgb(8 124 255 / 22%);
+    --rap-shadow-panel: 0 6px 20px rgb(0 0 0 / 13%);
+}
