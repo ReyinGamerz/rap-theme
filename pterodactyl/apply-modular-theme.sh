@@ -118,9 +118,10 @@ changes = {}
 # recoloring every page with broad global CSS selectors.
 rel = "tailwind.config.js"
 text = read(rel)
-marker = "/* RAPELZ THEME TOKENS v1 */"
-if marker not in text:
-    palette = """/* RAPELZ THEME TOKENS v1 */
+marker = "/* RAPELZ THEME TOKENS v2 */"
+legacy_marker = "/* RAPELZ THEME TOKENS v1 */"
+
+palette = """/* RAPELZ THEME TOKENS v2 */
 const rapelzGray = {
     50: 'rgb(var(--rap-gray-50) / <alpha-value>)',
     100: 'rgb(var(--rap-gray-100) / <alpha-value>)',
@@ -205,14 +206,8 @@ const rapelzBorder = {
     950: 'rgb(var(--rap-border-950) / <alpha-value>)',
 };
 """
-    text = replace_once(
-        text,
-        r"const colors = require\('tailwindcss/colors'\);\s*const gray = \{.*?\n\};",
-        lambda _m: palette.rstrip(),
-        rel,
-        flags=re.S,
-    )
-    colors_block = """colors: {
+
+colors_block = """colors: {
                 black: 'rgb(var(--rap-black) / <alpha-value>)',
                 blue: rapelzBlue,
                 primary: rapelzBlue,
@@ -225,28 +220,81 @@ const rapelzBorder = {
                 yellow: rapelzAmber,
                 amber: rapelzAmber,
             },"""
-    text = replace_once(
-        text,
-        r"colors:\s*\{\s*black:\s*'#131a20',.*?cyan:\s*colors\.cyan,\s*\},",
-        lambda _m: colors_block,
-        rel,
-        flags=re.S,
-    )
-    text = replace_once(
-        text,
-        r"borderColor:\s*theme\s*=>\s*\(\{\s*default:\s*theme\('colors\.neutral\.400',\s*'currentColor'\),\s*\}\),",
-        "borderColor: theme => ({\n                default: 'var(--rap-line)',\n                neutral: rapelzBorder,\n                gray: rapelzBorder,\n            }),",
-        rel,
-        flags=re.S,
-    )
-    # Radius and shadow utilities are first-class tokens too, replacing the
-    # prior broad selectors that forced radius/shadow on arbitrary elements.
-    text = replace_once(
-        text,
-        r"(\s*fontSize:\s*\{)",
-        lambda m: "\n            borderRadius: {\n                DEFAULT: 'var(--rap-radius-md)',\n                none: '0px',\n                sm: 'var(--rap-radius-sm)',\n                md: 'var(--rap-radius-md)',\n                lg: 'var(--rap-radius-md)',\n                xl: 'var(--rap-radius-md)',\n                '2xl': 'var(--rap-radius-lg)',\n                full: '9999px',\n            },\n            boxShadow: {\n                sm: 'var(--rap-shadow-sm)',\n                DEFAULT: 'var(--rap-shadow-md)',\n                md: 'var(--rap-shadow-md)',\n                lg: 'var(--rap-shadow-lg)',\n                xl: 'var(--rap-shadow-xl)',\n                '2xl': 'var(--rap-shadow-2xl)',\n                inner: 'var(--rap-shadow-inner)',\n                none: 'none',\n            },\n            "+ m.group(1),
-        rel,
-    )
+
+radius_shadow = """            borderRadius: {
+                DEFAULT: 'var(--rap-radius-md)',
+                none: '0px',
+                sm: 'var(--rap-radius-sm)',
+                md: 'var(--rap-radius-md)',
+                lg: 'var(--rap-radius-md)',
+                xl: 'var(--rap-radius-md)',
+                '2xl': 'var(--rap-radius-lg)',
+                full: '9999px',
+            },
+            boxShadow: {
+                sm: 'var(--rap-shadow-sm)',
+                DEFAULT: 'var(--rap-shadow-md)',
+                md: 'var(--rap-shadow-md)',
+                lg: 'var(--rap-shadow-lg)',
+                xl: 'var(--rap-shadow-xl)',
+                '2xl': 'var(--rap-shadow-2xl)',
+                inner: 'var(--rap-shadow-inner)',
+                none: 'none',
+            },"""
+
+if marker not in text:
+    if legacy_marker in text:
+        # Upgrade a source tree already patched by the earlier v1 overlay.
+        text = replace_once(
+            text,
+            r"/\* RAPELZ THEME TOKENS v1 \*/.*?const rapelzBorder = \{.*?\};",
+            lambda _m: palette.rstrip(),
+            rel,
+            flags=re.S,
+        )
+        text = replace_once(
+            text,
+            r"colors:\s*\{\s*black:\s*'#050a11',.*?cyan:\s*rapelzBlue,\s*\},",
+            lambda _m: colors_block,
+            rel,
+            flags=re.S,
+        )
+        text = replace_once(
+            text,
+            r"borderRadius:\s*\{.*?\},\s*boxShadow:\s*\{.*?\},\s*(fontSize:\s*\{)",
+            lambda m: radius_shadow + "\n            " + m.group(1),
+            rel,
+            flags=re.S,
+        )
+    else:
+        # Fresh official Pterodactyl v1.15.1 source.
+        text = replace_once(
+            text,
+            r"const colors = require\('tailwindcss/colors'\);\s*const gray = \{.*?\n\};",
+            lambda _m: palette.rstrip(),
+            rel,
+            flags=re.S,
+        )
+        text = replace_once(
+            text,
+            r"colors:\s*\{\s*black:\s*'#131a20',.*?cyan:\s*colors\.cyan,\s*\},",
+            lambda _m: colors_block,
+            rel,
+            flags=re.S,
+        )
+        text = replace_once(
+            text,
+            r"borderColor:\s*theme\s*=>\s*\(\{\s*default:\s*theme\('colors\.neutral\.400',\s*'currentColor'\),\s*\}\),",
+            "borderColor: theme => ({\n                default: 'var(--rap-line)',\n                neutral: rapelzBorder,\n                gray: rapelzBorder,\n            }),",
+            rel,
+            flags=re.S,
+        )
+        text = replace_once(
+            text,
+            r"(\s*fontSize:\s*\{)",
+            lambda m: "\n" + radius_shadow + "\n            " + m.group(1),
+            rel,
+        )
     changes[rel] = text
 
 # GlobalStylesheet is an intentional React global-style layer, like Noobee's.
