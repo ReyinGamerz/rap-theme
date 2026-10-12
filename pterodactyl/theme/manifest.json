@@ -1,0 +1,18 @@
+{
+  "name": "rapelz-react-theme",
+  "schemaVersion": 1,
+  "target": "Pterodactyl Panel 1.15.1 React client",
+  "design": "Rapelz navy, electric blue, green",
+  "entry": "entry.css",
+  "styles": [
+    "tokens.css",
+    "base.css",
+    "components/panels.css",
+    "components/controls.css",
+    "components/data-display.css",
+    "pages/dashboard.css",
+    "pages/console.css",
+    "pages/files.css"
+  ],
+  "status": "foundation-not-yet-verified-against-panel-source"
+}
