@@ -1,0 +1,20 @@
+/* These markers are added by the version-checked source overlay. */
+[data-rapelz-component="content-panel"],
+[data-rapelz-component="titled-panel"] {
+    border-color: var(--rap-line);
+    box-shadow: var(--rap-shadow-panel);
+}
+
+[data-rapelz-component="content-panel"] {
+    border-radius: var(--rap-radius-md);
+}
+
+[data-rapelz-component="titled-panel"] {
+    border: 1px solid var(--rap-line);
+    border-radius: var(--rap-radius-md);
+    overflow: hidden;
+}
+
+[data-rapelz-component="row"] {
+    border-color: var(--rap-line);
+}

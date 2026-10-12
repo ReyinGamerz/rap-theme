@@ -1,25 +1,46 @@
-# Manual UI Smoke Test — Rapelz Backup Manager
+# Testing Rap-theme
 
-This is a static demo. Records and summary cards are mock data; the Settings Save/Test controls are preview-only and do not call the backend.
+Dokumen ini membedakan uji prototipe Backup Manager dari uji rebuild tema Pterodactyl. Keduanya adalah target yang berbeda.
 
-## Open the prototype
+## A. Automated validation — modular Pterodactyl theme
 
-Open `index.html` in a modern browser, or serve this directory locally with any static file server. Keep it off public hosting until the review is complete.
+Workflow GitHub Actions pada branch rebuild mengambil source resmi Pterodactyl `v1.15.1` pada runner terisolasi dan menjalankan:
 
-## Checklist
+- penerapan overlay, termasuk uji penerapan ulang agar idempotent;
+- instalasi dependency memakai `yarn.lock` upstream;
+- `yarn tsc`;
+- `yarn lint`;
+- webpack production-mode tanpa memanggil `build:production` yang menjalankan cleanup aset lebih dahulu.
 
-- [ ] Overview loads without a blank screen.
-- [ ] Open Backups; table shows demo records.
-- [ ] Choose Node 1 and apply filter; every visible record belongs to `node-001`.
-- [ ] Change type/status/date/search and confirm results update.
-- [ ] Reset filters and check pagination + sort controls.
-- [ ] Open Restore Center, Node & Migration, Schedules, Reports, and Settings; section navigation works.
-- [ ] In Settings, invalid/non-Discord URL is rejected.
-- [ ] Enter a fake placeholder URL matching the format only if testing the UI; Save should clear the password field and display masked/configured status.
-- [ ] Test button shows a preview-only message and does not send a real webhook.
-- [ ] On mobile width, open/close the sidebar and check the backup table scrolls horizontally.
-- [ ] Keyboard: Ctrl/Cmd+K focuses global search.
+Hasil build yang sukses memvalidasi kompatibilitas source dan bundling. Itu **tidak** berarti perubahan sudah dideploy atau semua tampilan sudah diuji pada panel live.
 
-## What this does not verify
+## B. Manual runtime smoke test — lakukan di staging
 
-It does not verify a real Discord webhook, API authentication, Pterodactyl Admin integration, live backup data, restore, migration, or production server health. Those require backend staging tests.
+- [ ] Halaman login/auth tampil dengan latar dan kontrol Rapelz.
+- [ ] Dashboard terbuka dan baris server memuat status/resource yang benar.
+- [ ] Link dashboard/account/server tetap menuju halaman yang benar.
+- [ ] Permission route tetap menghalangi halaman yang tidak diizinkan.
+- [ ] Server power actions dan websocket tetap berfungsi.
+- [ ] Console terminal tetap mempertahankan warna ANSI dan scrollbar yang terbaca.
+- [ ] Console statistik/grafik menampilkan nilai yang benar.
+- [ ] File manager tetap bisa memilih, membuka, mengunggah, mengganti nama, menghapus, dan menggunakan menu konteks sesuai permission.
+- [ ] Input, modal, dropdown, fokus keyboard, dan pesan error dapat digunakan.
+- [ ] Layout tetap bisa dipakai pada lebar mobile; tabel/terminal tidak memaksa viewport melebar.
+- [ ] AdminLTE/Blade masih terbuka dan memakai tema admin Rapelz.
+- [ ] Pengujian dilakukan tanpa addon pihak ketiga terpasang.
+- [ ] Tidak ada error baru di console browser atau log panel.
+
+Jangan deploy ke produksi sampai build staging dan smoke test ini lolos.
+
+## C. Prototipe Backup Manager — demo statis terpisah
+
+Halaman `index.html` hanyalah mockup dengan data demo. Untuk memeriksa UI prototipe:
+
+- [ ] Overview dan tabel backup demo terbuka.
+- [ ] Filter node/type/status/date/search mengubah data terlihat.
+- [ ] Pagination dan sorting dapat dipakai.
+- [ ] Navigasi Restore Center, Node & Migration, Schedules, Reports, dan Settings bekerja.
+- [ ] Input webhook hanya memvalidasi format dan aksi Save/Test berstatus preview; tidak mengirim webhook sungguhan.
+- [ ] Pada layar mobile, sidebar dapat dibuka/tutup dan tabel bisa digulir horizontal.
+
+Prototipe ini tidak memverifikasi backend backup/restore, autentikasi API, migrasi node, atau kesehatan server produksi.

@@ -1,28 +1,33 @@
-# Noobee v1.1.1 — implementation notes for Rap-theme
+# Noobee v1.1.1 — research notes for Rap-theme
 
-This document records what was learned from the supplied Noobee v1.1.1 source archive and how those ideas are applied without replacing Rapelz's visual identity.
+Dokumen ini merangkum pola dari arsip Noobee v1.1.1 dan adaptasinya pada Rap-theme. Tujuannya menggunakan prinsip engineering yang sama sambil mempertahankan desain Rapelz, bukan menyalin tampilan Noobee.
 
-## What Noobee changes beyond colors
+## Pola Noobee yang dipelajari
 
-The archive is a Pterodactyl React-client source overlay, not just a stylesheet. Its changes are spread across several layers:
+- **Global styling:** `GlobalStylesheet.ts` memakai styled-components dan Tailwind untuk canvas, typography, focus, number inputs, dan scrollbar.
+- **Reusable primitives:** `Input.tsx`, `ContentBox.tsx`, `TitledGreyBox.tsx`, dan `GreyRowBox.tsx` menyatukan aturan UI umum.
+- **Route composition:** router menata navigasi, loading/suspense, permission, dan link berdasarkan konfigurasi.
+- **Dashboard server row:** status, metrik resource, dan ambang alarm ditangani sebagai komponen React.
+- **Console:** `StatBlock.tsx`, `ChartBlock.tsx`, dan `console/style.module.css` mengisolasi presentasi metrik dan terminal.
+- **File manager:** `FileObjectRow.tsx` dan `files/style.module.css` memisahkan baris file dari aksi/data.
+- **API data mapping:** client model bertipe dipasangkan dengan data yang disediakan oleh backend transformer.
 
-- **Global styling** — `resources/scripts/assets/css/GlobalStylesheet.ts` uses styled-components and Tailwind's `tw` helper for page background, typography, focus resets, number inputs, and scrollbar behavior.
-- **Reusable UI primitives** — `components/elements/Input.tsx`, `ContentBox.tsx`, `TitledGreyBox.tsx`, and `GreyRowBox.tsx` centralize form and panel styling instead of styling every screen independently.
-- **Route composition** — `routers/DashboardRouter.tsx`, `ServerRouter.tsx`, and `RouterElements.tsx` build navigation from route definitions, enforce permissions, handle suspense/loading, and filter egg/nest-specific links.
-- **Dashboard server rows** — `components/dashboard/ServerRow.tsx` combines server status, resource metrics, and alarm thresholds in one reusable row. This is component behavior/layout, not something CSS alone can fully recreate.
-- **Server console metrics** — `StatBlock.tsx`, `ChartBlock.tsx`, and `console/style.module.css` provide reusable metric cards, charts, and terminal layout.
-- **File manager rows** — `FileObjectRow.tsx` and `files/style.module.css` separate file-row layout from the file data/actions.
-- **API data mapping** — `api/server/getServer.ts` normalizes API fields into a typed server model. `app/Transformers/Api/Client/ServerTransformer.php` supplies status, node-maintenance, resource limits, and feature limits.
+## Implementasi Rap-theme
 
-## What was implemented in Rap-theme
+1. **Native Tailwind palette:** overlay mengadaptasi palette `gray/neutral` serta `blue/primary/cyan`, border, radius, dan shadow melalui `tailwind.config.js`. Ini mengurangi ketergantungan pada selector global yang menebak nama kelas.
+2. **Global styling di layer React:** canvas dan fokus berada di fondasi global yang terpisah dari CSS komponen.
+3. **Komponen reusable yang sudah ada dipertahankan:** marker eksplisit ditambahkan ke panel, form controls, baris server, kartu statistik/grafik, dan file row sehingga tema dapat menargetkan hanya komponen terkait.
+4. **CSS modular:** gaya React dipisah per concern di `theme/components/` dan `theme/pages/`. Styling AdminLTE juga dibagi ke token, base, dan refinement layer karena targetnya berbeda dengan React client.
+5. **Logika aplikasi tetap upstream:** routes, permissions, API, websocket, tindakan server, model data, dan metrik tidak diganti hanya untuk meniru Noobee.
 
-Rap-theme remains Rapelz navy/blue/green. The React stylesheet now applies the reusable design principles to the existing Pterodactyl UI: consistent global canvas and scrollbars, clearer panel hierarchy, compact table headers, consistent focus states, and responsive safeguards for long tables and terminal/code panes.
+## Automated validation
 
-## Important boundaries
+GitHub Actions menggunakan checkout bersih tag resmi `v1.15.1`, menerapkan source overlay dua kali dan membandingkan diff, lalu menjalankan TypeScript, ESLint, serta webpack production-mode tanpa tahap `clean` yang dipanggil oleh `build:production`. Ini memvalidasi integrasi source/build; uji visual/runtime tetap wajib di staging.
 
-- No Noobee branding, colors, logos, or visual theme are copied into Rapelz.
-- No Backup Manager or other feature is added.
-- This CSS layer does not change routes, API contracts, permissions, authentication, server actions, or websocket behavior.
-- CSS cannot add Noobee's metric calculations, alarm thresholds, data fields, or component structure. Those require deliberate TypeScript/PHP changes against the exact installed Pterodactyl version.
-- Noobee's PHP transformer and React source files must not be blindly copied over a production panel. Treat them as implementation references and port behavior only when there is a specific product requirement and a version-compatible test.
-- The theme installer still needs a production staging build after pulling repository changes; changing GitHub does not deploy to the live panel automatically.
+## Batasan
+
+- Tidak ada branding, warna, logo, atau desain Noobee yang disalin.
+- Tidak ada addon yang diasumsikan terpasang.
+- Tidak ada fitur Backup Manager yang ditambahkan ke Pterodactyl.
+- Noobee router/backend transformer tidak ditimpa ke source upstream; hanya prinsip yang relevan yang diadaptasi dengan pemeriksaan versi.
+- Perubahan GitHub tidak otomatis men-deploy ke panel produksi.

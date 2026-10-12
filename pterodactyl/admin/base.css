@@ -1,0 +1,70 @@
+/*
+ * Rapelz Theme — Pterodactyl admin CSS layer
+ * Visual only. No routes, APIs, JavaScript, or Backup Manager UI.
+ * Intended to be linked from the existing admin layout after the stock stylesheet.
+ */
+body.skin-blue, body.skin-blue .content-wrapper, body.skin-blue .right-side {
+    background: var(--rap-bg); color: var(--rap-text);
+}
+.skin-blue .main-header .logo, .skin-blue .main-header .navbar,
+.skin-blue .main-sidebar, .skin-blue .left-side { background: #0a111d; }
+.skin-blue .main-header .logo { color: var(--rap-text); border-bottom: 1px solid var(--rap-line); }
+.skin-blue .sidebar-menu > li.header { background: transparent; color: var(--rap-muted); }
+.skin-blue .sidebar-menu > li > a { color: #c4cede; transition: background-color .15s ease, color .15s ease; }
+.skin-blue .sidebar-menu > li:hover > a {
+    color: #fff;
+    background: rgb(8 124 255 / 10%);
+}
+.skin-blue .sidebar-menu > li.active > a,
+.skin-blue .sidebar-menu > li.active > a:hover,
+.skin-blue .sidebar-menu > li.active > a:focus {
+    color: #fff;
+    background: linear-gradient(100deg, rgb(8 124 255 / 24%), rgb(8 124 255 / 8%));
+    border-left-color: var(--rap-blue);
+}
+.skin-blue .main-header .navbar .sidebar-toggle:hover { background: #152338; }
+.content-header > h1, .content-header > h1 > small { color: var(--rap-text); }
+.box, .small-box, .info-box, .nav-tabs-custom, .modal-content, .dropdown-menu {
+    background: var(--rap-panel); color: var(--rap-text); border-color: var(--rap-line); border-radius: 11px;
+}
+.box { border-top-color: var(--rap-blue); box-shadow: 0 4px 18px rgb(0 0 0 / 12%); }
+.box-header, .box-footer, .modal-header, .modal-footer { border-color: var(--rap-line); }
+.box-title, label, .control-label { color: var(--rap-text); }
+.form-control, .select2-container--default .select2-selection--single,
+.select2-container--default .select2-selection--multiple {
+    background-color: #0a111d; color: var(--rap-text); border-color: var(--rap-line); border-radius: 7px;
+}
+.form-control:focus { border-color: var(--rap-blue); box-shadow: 0 0 0 2px rgb(22 128 255 / 15%); }
+.table > thead > tr > th, .table > tbody > tr > td, .table > tfoot > tr > td { border-color: var(--rap-line); }
+.table > thead > tr > th { color: #c4cede; }
+.table-striped > tbody > tr:nth-of-type(odd) { background-color: rgb(255 255 255 / 2%); }
+.table-hover > tbody > tr:hover { background-color: rgb(22 128 255 / 8%); }
+.btn-primary, .btn-info { background-color: var(--rap-blue); border-color: var(--rap-blue); color: #fff; }
+.btn-primary:hover, .btn-primary:focus, .btn-info:hover, .btn-info:focus {
+    background-color: var(--rap-blue-hover); border-color: var(--rap-blue-hover); color: #fff;
+}
+.btn-default { background: var(--rap-panel-alt); color: var(--rap-text); border-color: var(--rap-line); }
+a { color: #59a6ff; }
+a:hover, a:focus { color: #8bc1ff; }
+.alert-success { background: rgb(41 216 138 / 10%); color: var(--rap-green); border-color: rgb(41 216 138 / 35%); }
+.alert-danger { background: rgb(255 109 121 / 10%); color: var(--rap-red); border-color: rgb(255 109 121 / 35%); }
+.main-footer { background: #0a111d; color: var(--rap-muted); border-top-color: var(--rap-line); }
+.login-page { background: var(--rap-bg); }
+.pterodactyl-login-box {
+    background: var(--rap-panel); border: 1px solid var(--rap-line);
+    border-radius: 11px; box-shadow: 0 12px 36px rgb(0 0 0 / 22%);
+}
+.pterodactyl-login-input > input {
+    background: #0a111d; border: 1px solid var(--rap-line); border-radius: 7px; color: var(--rap-text);
+}
+.pterodactyl-login-button--main {
+    background: var(--rap-blue); border: 1px solid var(--rap-blue); border-radius: 7px; color: #fff;
+}
+.pterodactyl-login-button--main:hover {
+    background: var(--rap-blue-hover); border-color: var(--rap-blue-hover); color: #fff;
+}
+@media (max-width: 767px) {
+    .content-wrapper, .right-side { min-height: 100vh; }
+    .box { border-radius: 8px; }
+    .table-responsive { border-color: var(--rap-line); }
+}

@@ -1,0 +1,63 @@
+/* Small global foundation. Most colors are compiled as native Tailwind tokens. */
+html,
+body,
+#app {
+    min-height: 100%;
+}
+
+html,
+body {
+    background-color: var(--rap-bg);
+    color: var(--rap-text);
+}
+
+::selection {
+    color: #fff;
+    background: rgb(8 124 255 / 32%);
+}
+
+:where(a, button, input, select, textarea, [role="button"]):focus-visible {
+    outline: 2px solid rgb(8 124 255 / 85%);
+    outline-offset: 2px;
+}
+
+:where(button, [role="button"], a) {
+    -webkit-tap-highlight-color: transparent;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--rap-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2a3b52;
+    border: 2px solid var(--rap-bg);
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3c5675;
+}
+
+#app {
+    min-width: 0;
+    overflow-x: clip;
+}
+
+:where(pre, code) {
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 767px) {
+    html,
+    body,
+    #app {
+        max-width: 100%;
+        overflow-x: clip;
+    }
+}

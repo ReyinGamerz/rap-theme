@@ -1,0 +1,10 @@
+/* Preserve xterm ANSI output colors; customize only the terminal canvas/scrollbar. */
+.xterm,
+.xterm-screen,
+.xterm-viewport {
+    background-color: #050a11;
+}
+
+.xterm .xterm-viewport {
+    scrollbar-color: #2a3b52 #050a11;
+}

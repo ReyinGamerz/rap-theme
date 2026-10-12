@@ -1,0 +1,14 @@
+/* Component-local markers avoid recoloring unrelated tables or third-party UI. */
+.rapelz-stat-card,
+.rapelz-chart-card {
+    border-color: var(--rap-line);
+    box-shadow: var(--rap-shadow-panel);
+}
+
+.rapelz-stat-card {
+    border: 1px solid var(--rap-line);
+}
+
+.rapelz-chart-card {
+    border-bottom-color: var(--rap-line-strong);
+}

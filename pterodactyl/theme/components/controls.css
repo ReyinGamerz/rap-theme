@@ -1,0 +1,17 @@
+/* Reusable Pterodactyl Input and Textarea components receive these markers. */
+[data-rapelz-component="input"],
+[data-rapelz-component="textarea"] {
+    accent-color: var(--rap-blue);
+    caret-color: var(--rap-text);
+}
+
+[data-rapelz-component="input"]:focus-visible,
+[data-rapelz-component="textarea"]:focus-visible {
+    outline: 2px solid var(--rap-blue);
+    outline-offset: 1px;
+}
+
+[data-rapelz-component="input"]:disabled,
+[data-rapelz-component="textarea"]:disabled {
+    cursor: not-allowed;
+}
