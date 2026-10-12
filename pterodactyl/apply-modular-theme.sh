@@ -65,8 +65,8 @@ if ! grep -q "import '@/assets/tailwind.css';" "$PANEL_DIR/resources/scripts/com
     exit 5
 fi
 
-if [[ ! -s "$SCRIPT_DIR/theme/entry.css" || ! -s "$SCRIPT_DIR/admin-theme.css" ]]; then
-    echo "ERROR: theme entry or admin stylesheet is missing from the rap-theme repository."
+if [[ ! -s "$SCRIPT_DIR/theme/entry.css" || ! -s "$SCRIPT_DIR/admin-theme.css" || ! -s "$SCRIPT_DIR/admin/tokens.css" || ! -s "$SCRIPT_DIR/admin/base.css" || ! -s "$SCRIPT_DIR/admin/refinements.css" ]]; then
+    echo "ERROR: React or modular AdminLTE stylesheet files are missing from the rap-theme repository."
     exit 6
 fi
 
@@ -90,6 +90,7 @@ for file in "${required[@]}"; do backup_one "$file"; done
 backup_one "resources/scripts/assets/css/rapelz-theme.css"
 backup_one "resources/scripts/assets/css/rapelz-theme"
 backup_one "public/themes/pterodactyl/css/rapelz-theme.css"
+backup_one "public/themes/pterodactyl/css/rapelz-admin"
 
 echo "Applying version-checked source changes..."
 python3 - "$PANEL_DIR" <<'PY'
@@ -341,6 +342,10 @@ cp -a "$SCRIPT_DIR/theme/." "$DEST_THEME/"
 
 mkdir -p "$PANEL_DIR/public/themes/pterodactyl/css"
 install -m 0644 "$SCRIPT_DIR/admin-theme.css" "$PANEL_DIR/public/themes/pterodactyl/css/rapelz-theme.css"
+DEST_ADMIN="$PANEL_DIR/public/themes/pterodactyl/css/rapelz-admin"
+rm -rf "$DEST_ADMIN"
+mkdir -p "$DEST_ADMIN"
+cp -a "$SCRIPT_DIR/admin/." "$DEST_ADMIN/"
 
 echo
 echo "Rapelz modular source integration complete."
