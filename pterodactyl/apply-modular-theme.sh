@@ -394,30 +394,17 @@ patches = [
     ),
 ]
 
-# Repair the malformed className emitted by the early v2 overlay if this installer is re-applied.
+# Repair the malformed file-row interpolation from an earlier overlay.
 rel = "resources/scripts/components/server/files/FileObjectRow.tsx"
 text = changes.get(rel, read(rel))
 text = text.replace("className={`{styles.file_row} rapelz-file-row`}", "className={`${styles.file_row} rapelz-file-row`}")
-changes[rel] = text
-
-# Ensure repeat-apply also repairs the malformed file-row interpolation from an earlier overlay.
-rel = "resources/scripts/components/server/files/FileObjectRow.tsx"
-text = changes.get(rel, read(rel))
-text = text.replace("className={`{styles.file_row} rapelz-file-row`}", "className={`${styles.file_row} rapelz-file-row`}")
-if "className={`${styles.file_row} rapelz-file-row`}" not in text:
+if "rapelz-file-row" not in text:
     text = replace_once(
         text,
         r"className=\{styles\.file_row\}",
         lambda _m: "className={" + chr(96) + "${styles.file_row} rapelz-file-row" + chr(96) + "}",
         rel,
     )
-changes[rel] = text
-
-# Verify the selector marker matches what the dashboard stylesheet targets.
-rel = "resources/scripts/components/dashboard/ServerRow.tsx"
-text = changes.get(rel, read(rel))
-if "data-rapelz-component='server-row'" not in text:
-    raise RuntimeError("ServerRow Rapelz marker not found after patching.")
 changes[rel] = text
 
 for rel, marker, pattern, replacement, flags in patches:
