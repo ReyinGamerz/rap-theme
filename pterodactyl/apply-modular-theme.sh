@@ -41,6 +41,7 @@ required=(
     resources/scripts/components/elements/GreyRowBox.tsx
     resources/scripts/components/elements/TitledGreyBox.tsx
     resources/scripts/components/dashboard/ServerRow.tsx
+    resources/scripts/components/dashboard/DashboardContainer.tsx
     resources/scripts/components/server/console/StatBlock.tsx
     resources/scripts/components/server/console/ChartBlock.tsx
     resources/scripts/components/server/files/FileObjectRow.tsx
