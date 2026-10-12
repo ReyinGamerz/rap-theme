@@ -89,6 +89,35 @@ jobs:
           }
           console.log('Validated', adminVisited.size, 'modular AdminLTE CSS files');
           NODE
+          node - <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const tokenText = fs.readFileSync('pterodactyl/theme/tokens.css', 'utf8');
+          const declared = new Set([...tokenText.matchAll(/(--rap-[\\w-]+)\\s*:/g)].map(m => m[1]));
+          function cssFiles(dir) {
+            return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
+              const full = path.join(dir, entry.name);
+              if (entry.isDirectory()) return cssFiles(full);
+              return entry.isFile() && entry.name.endsWith('.css') ? [full] : [];
+            });
+          }
+          const sources = [
+            ...cssFiles('pterodactyl/theme'),
+            ...cssFiles('pterodactyl/admin'),
+          ];
+          let unresolved = 0;
+          for (const file of sources) {
+            const css = fs.readFileSync(file, 'utf8');
+            for (const match of css.matchAll(/var\\(\\s*(--rap-[\\w-]+)/g)) {
+              if (!declared.has(match[1])) {
+                console.error('Undefined Rapelz design token:', match[1], 'used in', file);
+                unresolved += 1;
+              }
+            }
+          }
+          if (unresolved > 0) process.exit(1);
+          console.log('Validated Rapelz design tokens across', sources.length, 'CSS files');
+          NODE
 
   build-against-pterodactyl-1151:
     runs-on: ubuntu-latest
