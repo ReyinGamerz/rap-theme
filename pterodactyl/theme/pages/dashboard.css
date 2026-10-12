@@ -1,13 +1,21 @@
+/* Server rows remain visible and navigable without modifying server data or permissions. */
 [data-rapelz-component="server-row"] {
     border-color: var(--rap-line);
     transition: border-color .15s ease, background-color .15s ease;
 }
-
 [data-rapelz-component="server-row"]:hover {
     border-color: var(--rap-line-strong);
 }
-
 [data-rapelz-component="server-row"]:focus-visible {
     outline: 2px solid var(--rap-blue);
     outline-offset: 2px;
+}
+
+/* Keep mobile server cards readable at narrow viewport widths. */
+@media (max-width: 767px) {
+    [data-rapelz-component="server-row"] {
+        min-width: 0;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
 }
