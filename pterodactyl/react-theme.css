@@ -1,0 +1,116 @@
+/*
+ * Rapelz visual theme for Pterodactyl Panel v1.15.1.
+ * Visual-only overrides. Does not change routes, APIs, auth, console logic, or server behavior.
+ * Import from resources/scripts/components/App.tsx before building.
+ */
+:root {
+    color-scheme: dark;
+    --rap-bg: #080e18;
+    --rap-panel: #0e1724;
+    --rap-panel-2: #101b2a;
+    --rap-panel-3: #142235;
+    --rap-line: #202e40;
+    --rap-text: #e8eef8;
+    --rap-muted: #91a0b6;
+    --rap-blue: #1680ff;
+    --rap-blue-hover: #0b5fd4;
+    --rap-green: #29d88a;
+    --rap-red: #ff6d79;
+    --rap-amber: #f5b942;
+    --rap-radius: 11px;
+}
+
+html, body, #app {
+    min-height: 100%;
+    background: var(--rap-bg);
+    color: var(--rap-text);
+}
+
+body {
+    background-color: var(--rap-bg) !important;
+    color: var(--rap-text) !important;
+}
+
+::selection { background: rgba(22, 128, 255, .32); color: #fff; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--rap-bg); }
+::-webkit-scrollbar-thumb { background: #2a3b52; border: 2px solid var(--rap-bg); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #3c5675; }
+
+a { color: #65adff; transition: color .15s ease; }
+a:hover { color: #9bcaff; }
+
+/* Common panel surfaces across dashboard, auth and server pages. */
+[class*="bg-neutral-900"], [class*="bg-neutral-800"],
+[class*="bg-gray-900"], [class*="bg-gray-800"] {
+    background-color: var(--rap-panel) !important;
+}
+[class*="bg-neutral-700"], [class*="bg-gray-700"] {
+    background-color: var(--rap-panel-2) !important;
+}
+[class*="bg-neutral-600"], [class*="bg-gray-600"] {
+    background-color: var(--rap-panel-3) !important;
+}
+[class*="border-neutral-"], [class*="border-gray-"] {
+    border-color: var(--rap-line) !important;
+}
+[class*="text-neutral-"], [class*="text-gray-"] {
+    color: var(--rap-text);
+}
+[class*="text-neutral-400"], [class*="text-neutral-500"],
+[class*="text-gray-400"], [class*="text-gray-500"] {
+    color: var(--rap-muted) !important;
+}
+
+/* Forms and controls. */
+input, textarea, select {
+    color: var(--rap-text) !important;
+    background-color: #0a1320 !important;
+    border-color: #2a3b52 !important;
+    border-radius: 8px;
+}
+input::placeholder, textarea::placeholder { color: #71839c !important; }
+input:focus, textarea:focus, select:focus {
+    border-color: var(--rap-blue) !important;
+    box-shadow: 0 0 0 2px rgba(22, 128, 255, .18) !important;
+    outline: none !important;
+}
+
+/* Primary actions and blue accents. */
+button[class*="bg-primary"], a[class*="bg-primary"],
+button[class*="bg-blue"], a[class*="bg-blue"],
+[class*="bg-primary-"], [class*="bg-blue-600"] {
+    transition: background-color .15s ease, border-color .15s ease, transform .15s ease;
+}
+button[class*="bg-primary"], a[class*="bg-primary"],
+button[class*="bg-blue-600"], a[class*="bg-blue-600"],
+[class~="bg-blue-600"] {
+    background-color: var(--rap-blue) !important;
+}
+button[class*="bg-primary"]:hover, a[class*="bg-primary"]:hover,
+button[class*="bg-blue-600"]:hover, a[class*="bg-blue-600"]:hover {
+    background-color: var(--rap-blue-hover) !important;
+}
+
+/* Cards, tables, server rows, and content containers. */
+[class*="rounded"][class*="border"],
+table, thead, tbody, tr, th, td {
+    border-color: var(--rap-line);
+}
+table { color: var(--rap-text); border-collapse: separate; border-spacing: 0; }
+thead { background: #0b1421; }
+th { color: #cbd7e8; font-weight: 600; }
+tr:hover td { background-color: rgba(22, 128, 255, .045); }
+hr { border-color: var(--rap-line) !important; }
+
+/* Keep status semantics recognizable and readable. */
+[class*="text-green-"], [class*="text-success"] { color: var(--rap-green); }
+[class*="text-red-"], [class*="text-danger"] { color: var(--rap-red); }
+[class*="text-yellow-"], [class*="text-amber-"], [class*="text-warning"] { color: var(--rap-amber); }
+
+/* Terminal must remain legible and retain its own rendered colors. */
+.xterm, .xterm-screen, .xterm-viewport { background-color: #050a11 !important; }
+.xterm .xterm-viewport { scrollbar-color: #2a3b52 #050a11; }
+
+/* Small-screen safety: avoid forcing fixed widths or changing app layout. */
+img, canvas, video { max-width: 100%; }
