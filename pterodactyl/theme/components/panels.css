@@ -1,0 +1,17 @@
+/* Shared surfaces; selectors are deliberately limited to common utilities. */
+:where([class~="bg-neutral-900"], [class~="bg-gray-900"], [class~="bg-neutral-800"], [class~="bg-gray-800"]) {
+    background-color: var(--rap-surface);
+}
+
+:where([class~="bg-neutral-700"], [class~="bg-gray-700"]) {
+    background-color: var(--rap-surface-raised);
+}
+
+:where([class~="border-neutral-800"], [class~="border-neutral-700"], [class~="border-gray-800"], [class~="border-gray-700"]) {
+    border-color: var(--rap-border);
+}
+
+/* Apply raised edges only to visibly bordered, rounded surfaces. */
+:where(div, section, article)[class*="rounded"][class*="border"] {
+    border-color: var(--rap-border);
+}
