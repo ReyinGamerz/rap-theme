@@ -1,0 +1,7 @@
+/* Dashboard-only refinements. Keep selectors scoped to existing dashboard roots. */
+/* Intentionally small until verified against the exact 1.15.1 DOM. */
+@media (max-width: 767px) {
+    #app :where(table) {
+        max-width: 100%;
+    }
+}
