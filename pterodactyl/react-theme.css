@@ -188,3 +188,67 @@ button:active { transform: translateY(1px); }
     pre, code { overflow-wrap: anywhere; }
     .xterm, .xterm-screen { max-width: 100%; }
 }
+
+
+/* === Noobee architecture lessons, expressed in Rapelz styling ===
+ * Source studied: Noobee v1.1.1.
+ * Keep these as presentation-only enhancements over Pterodactyl's existing
+ * reusable components. Do not add feature logic or assume CSS-module names
+ * survive compilation.
+ */
+
+/* GlobalStylesheet lesson: a deliberate canvas and accessible focus states. */
+body {
+    letter-spacing: .01em;
+    text-rendering: optimizeLegibility;
+}
+:focus-visible {
+    outline: 2px solid rgba(8, 124, 255, .9) !important;
+    outline-offset: 2px;
+}
+
+/* Reusable panel primitives: consistent surface, borders and depth. */
+[class*="bg-neutral-700/40"], [class*="bg-gray-700/40"] {
+    border-color: var(--rap-line);
+    box-shadow: 0 5px 18px rgb(0 0 0 / 12%);
+}
+[class*="bg-neutral-700/40"] h1,
+[class*="bg-neutral-700/40"] h2,
+[class*="bg-neutral-700/40"] h3,
+[class*="bg-gray-700/40"] h1,
+[class*="bg-gray-700/40"] h2,
+[class*="bg-gray-700/40"] h3 {
+    color: var(--rap-text);
+}
+
+/* Server-row / metric-card lesson: make status and resource information scan well. */
+[class*="grid-cols-"][class*="gap-"] > [class*="rounded"],
+[class*="flex"][class*="items-center"][class*="rounded"][class*="shadow"] {
+    min-width: 0;
+}
+[class*="text-xs"][class*="text-neutral-500"],
+[class*="text-xs"][class*="text-gray-500"] {
+    line-height: 1.35;
+}
+progress {
+    accent-color: var(--rap-blue);
+}
+
+/* File-manager and activity-list lesson: row interactions should be obvious,
+   while preserving the original click targets and permission checks. */
+a[class*="flex"][class*="items-center"]:hover,
+[class*="cursor-pointer"][class*="rounded"]:hover {
+    transition: background-color .14s ease, color .14s ease, border-color .14s ease;
+}
+a[class*="flex"][class*="items-center"]:focus-visible {
+    border-radius: 6px;
+}
+
+/* Terminal/chart lesson: keep data panes readable and avoid layout overflow. */
+pre, code, .xterm, .xterm-screen, .xterm-viewport {
+    min-width: 0;
+}
+@media (max-width: 767px) {
+    [class*="overflow-x-auto"] { max-width: 100%; }
+    [class*="grid-cols-3"], [class*="grid-cols-6"] { min-width: 0; }
+}
