@@ -326,23 +326,6 @@ if new_import not in text:
     )
 changes[rel] = text
 
-# Verify the current source can accept the dashboard and file-row style markers.
-# This keeps the installer repeatable while never changing server APIs or ownership.
-rel = "resources/scripts/components/server/files/FileObjectRow.tsx"
-text = changes.get(rel, read(rel))
-malformed_row = "className={`{styles.file_row} rapelz-file-row`}"
-fixed_row = "className={`${styles.file_row} rapelz-file-row`}"
-if malformed_row in text:
-    text = text.replace(malformed_row, fixed_row)
-elif "rapelz-file-row" not in text:
-    text = replace_once(
-        text,
-        r"className=\{styles\.file_row\}",
-        lambda _m: "className={" + chr(96) + "${styles.file_row} rapelz-file-row" + chr(96) + "}",
-        rel,
-    )
-changes[rel] = text
-
 # Add narrowly scoped markers to the existing reusable components. The
 # components retain Pterodactyl behavior, types, actions, and data flow.
 patches = [
