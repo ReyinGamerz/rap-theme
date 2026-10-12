@@ -1,0 +1,10 @@
+/* Console terminal has its own ANSI palette; don't recolor its descendants. */
+.xterm,
+.xterm-screen,
+.xterm-viewport {
+    background-color: #050a11;
+}
+
+.xterm .xterm-viewport {
+    scrollbar-color: #2a3b52 #050a11;
+}
