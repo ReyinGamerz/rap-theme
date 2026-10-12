@@ -1,0 +1,35 @@
+/* Controls inherit Pterodactyl dimensions and layout; only presentation is customized. */
+:where(input, textarea, select) {
+    color: var(--rap-text);
+    background-color: #09111c;
+    border-color: var(--rap-border-strong);
+    border-radius: var(--rap-radius-sm);
+}
+
+:where(input, textarea)::placeholder {
+    color: var(--rap-placeholder);
+    opacity: 1;
+}
+
+:where(input, textarea, select):focus {
+    border-color: var(--rap-blue);
+    box-shadow: var(--rap-focus);
+    outline: none;
+}
+
+:where(button, [role="button"]) {
+    -webkit-tap-highlight-color: transparent;
+}
+
+:where(button[class~="bg-blue-600"], a[class~="bg-blue-600"]) {
+    background-color: var(--rap-blue);
+    transition: background-color .15s ease, border-color .15s ease;
+}
+
+:where(button[class~="bg-blue-600"], a[class~="bg-blue-600"]):hover {
+    background-color: var(--rap-blue-hover);
+}
+
+:where(button[class~="bg-blue-600"], a[class~="bg-blue-600"]):active {
+    transform: translateY(1px);
+}
