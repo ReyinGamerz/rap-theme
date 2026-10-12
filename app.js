@@ -12,7 +12,10 @@ const data = [
 {id:"bk-134",date:"2026-10-10",time:"02:30",type:"Panel",name:"Panel Backup",host:"panel.rapelz.my.id",node:"panel",nodeName:"Panel",ip:"168.144.240.126",size:1.0,status:"success",ago:"2 hari lalu"},
 {id:"bk-133",date:"2026-10-10",time:"02:45",type:"Node",name:"Node 1 Backup",host:"node-1.rapelz.my.id",node:"node-001",nodeName:"Node 1",ip:"168.144.240.201",size:11.5,status:"running",ago:"2 hari lalu"},
 {id:"bk-132",date:"2026-10-10",time:"03:10",type:"Node",name:"Node 2 Backup",host:"node-2.rapelz.my.id",node:"node-002",nodeName:"Node 2",ip:"168.144.240.202",size:17.1,status:"success",ago:"2 hari lalu"},
-{id:"bk-131",date:"2026-10-10",time:"03:45",type:"Node",name:"Node 3 Backup",host:"node-3.rapelz.my.id",node:"node-003",nodeName:"Node 3",ip:"168.144.240.203",size:15.6,status:"success",ago:"2 hari lalu"}
+{id:"bk-131",date:"2026-10-10",time:"03:45",type:"Node",name:"Node 3 Backup",host:"node-3.rapelz.my.id",node:"node-003",nodeName:"Node 3",ip:"168.144.240.203",size:15.6,status:"success",ago:"2 hari lalu"},
+{id:"bk-130",date:"2026-10-09",time:"04:10",type:"Server",name:"Minecraft Survival",host:"UUID: srv-a81c",node:"node-001",nodeName:"Node 1",ip:"168.144.240.201",size:4.8,status:"success",ago:"3 hari lalu"},
+{id:"bk-129",date:"2026-10-09",time:"04:20",type:"Database",name:"Customer DB Dump",host:"UUID: srv-a81c",node:"node-001",nodeName:"Node 1",ip:"168.144.240.201",size:0.6,status:"success",ago:"3 hari lalu"},
+{id:"bk-128",date:"2026-10-09",time:"04:30",type:"File",name:"Node Configuration",host:"node-1.rapelz.my.id",node:"node-001",nodeName:"Node 1",ip:"168.144.240.201",size:0.2,status:"success",ago:"3 hari lalu"}
 ];
 let page=1, pageSize=8, filters={node:"all",type:"all",status:"all",date:"",search:""}, timer;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
