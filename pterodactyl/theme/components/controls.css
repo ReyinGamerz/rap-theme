@@ -1,35 +1,17 @@
-/* Controls inherit Pterodactyl dimensions and layout; only presentation is customized. */
-:where(input, textarea, select) {
-    color: var(--rap-text);
-    background-color: #09111c;
-    border-color: var(--rap-border-strong);
-    border-radius: var(--rap-radius-sm);
+/* Reusable Pterodactyl Input and Textarea components receive these markers. */
+[data-rapelz-component="input"],
+[data-rapelz-component="textarea"] {
+    accent-color: var(--rap-blue);
+    caret-color: var(--rap-text);
 }
 
-:where(input, textarea)::placeholder {
-    color: var(--rap-placeholder);
-    opacity: 1;
+[data-rapelz-component="input"]:focus-visible,
+[data-rapelz-component="textarea"]:focus-visible {
+    outline: 2px solid var(--rap-blue);
+    outline-offset: 1px;
 }
 
-:where(input, textarea, select):focus {
-    border-color: var(--rap-blue);
-    box-shadow: var(--rap-focus);
-    outline: none;
-}
-
-:where(button, [role="button"]) {
-    -webkit-tap-highlight-color: transparent;
-}
-
-:where(button[class~="bg-blue-600"], a[class~="bg-blue-600"]) {
-    background-color: var(--rap-blue);
-    transition: background-color .15s ease, border-color .15s ease;
-}
-
-:where(button[class~="bg-blue-600"], a[class~="bg-blue-600"]):hover {
-    background-color: var(--rap-blue-hover);
-}
-
-:where(button[class~="bg-blue-600"], a[class~="bg-blue-600"]):active {
-    transform: translateY(1px);
+[data-rapelz-component="input"]:disabled,
+[data-rapelz-component="textarea"]:disabled {
+    cursor: not-allowed;
 }
