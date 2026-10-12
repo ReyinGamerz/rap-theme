@@ -389,7 +389,7 @@ patches = [
         "resources/scripts/components/server/files/FileObjectRow.tsx",
         "rapelz-file-row",
         r"className=\{styles\.file_row\}",
-        lambda _m: "className={" + chr(96) + "{styles.file_row} rapelz-file-row" + chr(96) + "}",
+        lambda _m: "className={" + chr(96) + "${styles.file_row} rapelz-file-row" + chr(96) + "}",
         0,
     ),
 ]
