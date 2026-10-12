@@ -327,6 +327,7 @@ if new_import not in text:
 changes[rel] = text
 
 # Add an explicit server-empty hint for root admins to distinguish the stored switch filter.
+# Apply it to the dashboard source separately from marker patches, and make repeat-apply safe.
 rel = "resources/scripts/components/dashboard/DashboardContainer.tsx"
 text = read(rel)
 empty_marker = "RAPELZ_EMPTY_SERVER_HINT"
@@ -338,7 +339,7 @@ if empty_marker not in text:
         rel,
         flags=re.S,
     )
-    changes[rel] = text
+changes[rel] = text
 
 # Add narrowly scoped markers to the existing reusable components. The
 # components retain Pterodactyl behavior, types, actions, and data flow.
