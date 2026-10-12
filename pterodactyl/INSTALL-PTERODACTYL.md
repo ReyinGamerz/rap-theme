@@ -7,30 +7,37 @@ This is a **visual-only** theme layer for the existing Pterodactyl 1.15.1 React 
 - `pterodactyl/admin-theme.css`: visual overrides for the legacy Admin UI.
 - `pterodactyl/INSTALL-PTERODACTYL.md`: activation and rollback notes.
 
-## React theme integration
-1. Confirm the panel source is exactly v1.15.1 and take a backup of `resources/scripts/components/App.tsx`, `resources/scripts/assets/css/GlobalStylesheet.ts`, and `public/assets/`.
+## React UI integration
+1. Confirm the panel source is exactly v1.15.1. Back up `resources/scripts/components/App.tsx`, `resources/scripts/assets/css/GlobalStylesheet.ts`, and all of `public/assets/`.
 2. Copy `react-theme.css` to `resources/scripts/assets/css/rapelz-theme.css`.
-3. Add this import to `resources/scripts/components/App.tsx` alongside the existing CSS imports:
+3. In `resources/scripts/components/App.tsx`, add this import beside the existing CSS imports (for example, near `import '@/assets/tailwind.css';`):
    `import '@/assets/css/rapelz-theme.css';`
-4. Install dependencies from the repository lockfile in the panel source directory, then build in a staging copy first.
-5. If the build succeeds and the generated `public/assets/manifest.json` is valid, deploy the generated assets and hard-refresh the browser.
+4. Install dependencies using the exact package manager and lockfile supplied by the installed Pterodactyl 1.15.1 source. Do not mix npm-generated lockfiles with `yarn.lock`.
+5. Build in a separate staging copy first. Verify the command exits successfully and the generated `public/assets/manifest.json` is valid before deploying the resulting assets.
+6. Hard-refresh the browser after deployment.
 
-The import is deliberately an explicit source edit; do not inject it automatically into an unknown source version.
+The import is deliberately an explicit source edit; do not inject it automatically into an unknown source version. The stylesheet only overrides presentation and does not alter routing, authentication, API calls, or server/console behavior.
 
-## Build notes
-- Pterodactyl 1.15.1 ships prebuilt frontend assets, while its source is in `resources/scripts`.
-- Use the exact version's lockfile and package manager consistently. Do not mix npm-generated lockfiles with `yarn.lock`.
-- The upstream `build:production` script runs `clean` first and deletes existing JavaScript and source-map files under `public/assets`. **Never run it against production until dependencies are installed, a staging build succeeds, and a full restorable asset backup exists.**
-- After the source import is added, the user's intended production commands are:
+## Legacy Admin UI integration
+1. Back up `resources/views/layouts/admin.blade.php` and the target CSS directory.
+2. Copy `admin-theme.css` to `public/themes/pterodactyl/css/rapelz-theme.css`.
+3. Open `resources/views/layouts/admin.blade.php`. Find the existing `Theme::css('css/pterodactyl.css')` registration and add the theme immediately after it:
+   `{!! Theme::css('css/rapelz-theme.css') !!}`
+4. Check the Blade syntax and render an admin page. If the layout in your installation differs, stop and inspect it rather than blindly inserting the line.
+
+## Build and production safety
+- Pterodactyl 1.15.1 ships prebuilt frontend assets, while its editable React source is in `resources/scripts`.
+- The upstream `build:production` script runs `clean` first and deletes existing JavaScript and source-map files under `public/assets`. **Never run it against production until dependencies are installed, a staging build succeeds, and a restorable asset backup exists.**
+- The build tools require Node.js 22 or newer. The exact repository's package scripts and lockfile are authoritative; inspect them before choosing Yarn versus npm.
+- Once the React import is present and dependencies are installed, the intended production commands are:
   ```bash
   cd /var/www/pterodactyl
   yarn build:production
   php artisan view:clear
   ```
-  This assumes Yarn dependencies are already installed and the theme import is present. `view:clear` clears Laravel compiled views; it does not build frontend assets.
-
-## Admin UI
-Use the separate Admin CSS activation steps in the installation guide. Keep this activation separate from the React CSS import.
+  This assumes Yarn is installed and dependencies are already available. `view:clear` clears Laravel compiled views; it does not build frontend assets.
 
 ## Rollback
-Remove the CSS import from `App.tsx`, remove the copied `rapelz-theme.css`, rebuild using the matching lockfile, and restore the saved `public/assets/` backup if the build/deployment fails. Restore the original Admin Blade link if it was modified.
+- React UI: remove the import from `App.tsx`, remove `rapelz-theme.css`, and restore the saved `public/assets/` backup if needed.
+- Admin UI: remove the added Blade CSS line and remove the copied theme CSS file.
+- If anything looks wrong, restore the pre-change backups before trying another build.
