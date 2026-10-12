@@ -1,8 +1,9 @@
-name: Validate theme prototype
+name: Validate Rapelz theme
 on:
   push:
   pull_request:
   workflow_dispatch:
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -11,9 +12,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Check JavaScript syntax
+      - name: Check prototype JavaScript syntax
         run: node --check app.js
-      - name: Verify referenced local assets
+      - name: Validate prototype references
         run: |
           test -s index.html
           test -s styles.css
@@ -26,3 +27,32 @@ jobs:
           grep -q 'id="saveWebhook"' app.js
           grep -q 'id="testWebhook"' app.js
           grep -q 'Mode preview UI' app.js
+      - name: Validate modular React theme manifest and imports
+        run: |
+          node -e "const fs=require('fs'); const m=JSON.parse(fs.readFileSync('pterodactyl/theme/manifest.json','utf8')); if(m.entry!=='entry.css'||!Array.isArray(m.styles)||m.styles.length===0) process.exit(1); for(const f of [m.entry,...m.styles]) if(!fs.existsSync('pterodactyl/theme/'+f)) { console.error('Missing theme file:',f); process.exit(1); }"
+          node - <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const root = 'pterodactyl/theme';
+          const visited = new Set();
+          function inspect(file) {
+            const full = path.join(root, file);
+            if (visited.has(full)) return;
+            visited.add(full);
+            const css = fs.readFileSync(full, 'utf8');
+            for (const match of css.matchAll(/@import\s+(?:url\()?['"]([^'"]+)['"]\)?\s*;/g)) {
+              const target = match[1];
+              if (/^(https?:|data:)/i.test(target)) continue;
+              const child = path.normalize(path.join(path.dirname(file), target));
+              if (!fs.existsSync(path.join(root, child))) {
+                console.error('Missing CSS import:', file, '->', target);
+                process.exitCode = 1;
+              } else {
+                inspect(child);
+              }
+            }
+          }
+          inspect('entry.css');
+          if (!visited.size) process.exit(1);
+          console.log('Validated', visited.size, 'modular CSS files');
+          NODE
