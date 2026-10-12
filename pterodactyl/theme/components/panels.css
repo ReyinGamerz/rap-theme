@@ -1,17 +1,20 @@
-/* Shared surfaces; selectors are deliberately limited to common utilities. */
-:where([class~="bg-neutral-900"], [class~="bg-gray-900"], [class~="bg-neutral-800"], [class~="bg-gray-800"]) {
-    background-color: var(--rap-surface);
+/* These markers are added by the version-checked source overlay. */
+[data-rapelz-component="content-panel"],
+[data-rapelz-component="titled-panel"] {
+    border-color: var(--rap-line);
+    box-shadow: var(--rap-shadow-panel);
 }
 
-:where([class~="bg-neutral-700"], [class~="bg-gray-700"]) {
-    background-color: var(--rap-surface-raised);
+[data-rapelz-component="content-panel"] {
+    border-radius: var(--rap-radius-md);
 }
 
-:where([class~="border-neutral-800"], [class~="border-neutral-700"], [class~="border-gray-800"], [class~="border-gray-700"]) {
-    border-color: var(--rap-border);
+[data-rapelz-component="titled-panel"] {
+    border: 1px solid var(--rap-line);
+    border-radius: var(--rap-radius-md);
+    overflow: hidden;
 }
 
-/* Apply raised edges only to visibly bordered, rounded surfaces. */
-:where(div, section, article)[class*="rounded"][class*="border"] {
-    border-color: var(--rap-border);
+[data-rapelz-component="row"] {
+    border-color: var(--rap-line);
 }
