@@ -14,5 +14,5 @@
     "pages/console.css",
     "pages/files.css"
   ],
-  "status": "foundation-not-yet-verified-against-panel-source"
+  "status": "source-overlay-integrated-in-CI-build-pending"
 }
