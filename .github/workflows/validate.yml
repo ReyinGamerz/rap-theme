@@ -22,3 +22,7 @@ jobs:
           grep -q 'id="nodeFilter"' index.html
           grep -q 'href="#restore"' index.html
           grep -q 'id="toast"' index.html
+          grep -q 'function renderWebhookSettings' app.js
+          grep -q 'id="saveWebhook"' app.js
+          grep -q 'id="testWebhook"' app.js
+          grep -q 'Mode preview UI' app.js
