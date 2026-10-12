@@ -1,14 +1,14 @@
-/* Minimal global layer. Prefer component styles to broad global overrides. */
+/* Small global foundation. Most colors are compiled as native Tailwind tokens. */
 html,
 body,
 #app {
     min-height: 100%;
-    background: var(--rap-bg);
-    color: var(--rap-text);
 }
 
+html,
 body {
-    font-feature-settings: "ss01" on;
+    background-color: var(--rap-bg);
+    color: var(--rap-text);
 }
 
 ::selection {
@@ -44,11 +44,6 @@ body {
     background: #3c5675;
 }
 
-:where(img, canvas, video, svg) {
-    max-width: 100%;
-}
-
-/* Keep wide data and terminal content from widening mobile viewports. */
 #app {
     min-width: 0;
     overflow-x: clip;
@@ -56,4 +51,13 @@ body {
 
 :where(pre, code) {
     overflow-wrap: anywhere;
+}
+
+@media (max-width: 767px) {
+    html,
+    body,
+    #app {
+        max-width: 100%;
+        overflow-x: clip;
+    }
 }
