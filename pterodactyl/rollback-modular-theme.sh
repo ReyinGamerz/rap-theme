@@ -9,8 +9,8 @@ set -Eeuo pipefail
 #
 # Production web roots are blocked unless RAPELZ_ALLOW_PRODUCTION=1 is set.
 
-PANEL_DIR="\${1:-}"
-BACKUP_DIR="\${2:-}"
+PANEL_DIR="${1:-}"
+BACKUP_DIR="${2:-}"
 
 if [[ -z "$PANEL_DIR" || -z "$BACKUP_DIR" || ! -d "$PANEL_DIR" || ! -d "$BACKUP_DIR" ]]; then
     echo "Usage: $0 /path/to/pterodactyl-staging /path/to/rapelz-theme-rebuild-backup"
@@ -22,7 +22,7 @@ BACKUP_DIR="$(cd -- "$BACKUP_DIR" && pwd -P)"
 
 case "$PANEL_DIR" in
     /var/www/*)
-        if [[ "\${RAPELZ_ALLOW_PRODUCTION:-0}" != "1" ]]; then
+        if [[ "${RAPELZ_ALLOW_PRODUCTION:-0}" != "1" ]]; then
             echo "ERROR: rollback of a web-root path is blocked by default: $PANEL_DIR"
             echo "For an intentional emergency production rollback, set RAPELZ_ALLOW_PRODUCTION=1."
             exit 10
