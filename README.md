@@ -8,7 +8,7 @@ Branch **`rebuild/noobee-architecture`** berisi rebuild terarah dengan prinsip i
 
 - `pterodactyl/theme/`: CSS modular untuk client React: token, global foundation, komponen ber-marker, dashboard, console, dan file manager.
 - `pterodactyl/apply-modular-theme.sh`: integrasi source untuk Pterodactyl 1.15.1 dengan pemeriksaan anchor, backup otomatis, serta penolakan path `/var/www/*` secara default.
-- `pterodactyl/admin-theme.css` + `pterodactyl/admin/`: entry dan modul CSS terpisah untuk AdminLTE/Blade.
+- `pterodactyl/admin-theme.css` + `pterodactyl/admin/`: entry dan modul CSS terpisah untuk AdminLTE/Blade, memakai token yang sama dengan React.
 - `pterodactyl/rollback-modular-theme.sh`: pemulihan source dari backup installer.
 - `pterodactyl/react-theme.css`: CSS override lama yang dipertahankan sebagai referensi/rollback; jalur modular tidak mengimpornya.
 - `styles.css`, `index.html`, `app.js`: prototipe statis **Backup Manager** dengan data demo; bukan fitur Pterodactyl dan tidak dipasang ke panel.
