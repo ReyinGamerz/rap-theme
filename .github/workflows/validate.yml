@@ -61,7 +61,7 @@ jobs:
           // then copied as rapelz-admin/ next to the deployed entry stylesheet.
           const adminEntry = fs.readFileSync('pterodactyl/admin-theme.css', 'utf8');
           const adminVisited = new Set();
-          for (const match of adminEntry.matchAll(/@import\\s+(?:url\\()?['"]([^'"]+)['"]\\)?\\s*;/g)) {
+          for (const match of adminEntry.matchAll(/@import\s+(?:url\()?['"]([^'"]+)['"]\)?\s*;/g)) {
             const target = match[1];
             const expected = target.startsWith('rapelz-admin/')
               ? path.join('pterodactyl/admin', target.slice('rapelz-admin/'.length))
