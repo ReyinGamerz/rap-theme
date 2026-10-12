@@ -1,43 +1,14 @@
-/* Readable tables without altering the data model or table behavior. */
-table {
-    color: var(--rap-text);
-    border-color: var(--rap-border);
-    border-collapse: separate;
-    border-spacing: 0;
+/* Component-local markers avoid recoloring unrelated tables or third-party UI. */
+.rapelz-stat-card,
+.rapelz-chart-card {
+    border-color: var(--rap-line);
+    box-shadow: var(--rap-shadow-panel);
 }
 
-thead {
-    background: #0a131f;
+.rapelz-stat-card {
+    border: 1px solid var(--rap-line);
 }
 
-thead th {
-    color: #bdcadd;
-    font-size: .72rem;
-    font-weight: 700;
-    letter-spacing: .035em;
-    text-transform: uppercase;
-}
-
-table :where(th, td) {
-    border-color: var(--rap-border);
-}
-
-tbody tr {
-    transition: background-color .12s ease;
-}
-
-tbody tr:hover td {
-    background-color: rgb(8 124 255 / 4.5%);
-}
-
-:where([class*="text-green-"], [class*="text-success"]) {
-    color: var(--rap-green);
-}
-
-:where([class*="text-red-"], [class*="text-danger"]) {
-    color: var(--rap-red);
-}
-
-:where([class*="text-yellow-"], [class*="text-amber-"], [class*="text-warning"]) {
-    color: var(--rap-amber);
+.rapelz-chart-card {
+    border-bottom-color: var(--rap-line-strong);
 }
